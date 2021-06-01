@@ -1,2 +1,2 @@
-# AlphaZ-Plugins
+# Alpha
 Pyogram based repository
