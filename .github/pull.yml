@@ -1,0 +1,6 @@
+version: "1"
+rules:
+  - base: Alpha
+    upstream: AftahBagas:Alpha
+    mergeMethod: rebase
+    mergeUnstable: false
