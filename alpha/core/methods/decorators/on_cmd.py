@@ -38,7 +38,7 @@ class OnCmd(RawDecorator):  # pylint: disable=missing-class-docstring
         """\nDecorator for handling messages.
 
         Example:
-                @alphaz.on_cmd('test', about='for testing')
+                @alpha.on_cmd('test', about='for testing')
 
         Parameters:
             command (``str``):
