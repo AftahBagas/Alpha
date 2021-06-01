@@ -1,0 +1,5 @@
+# alfareza
+
+. init/init.sh
+
+runAlpha "$@"
