@@ -28,11 +28,11 @@ class RawClient(Client):
     MSG_REQ_PER_MIN = 20
     REQ_LOCK = asyncio.Lock()
 
-    def __init__(self, bot: Optional['alphaz.core.client.AlphazBot'] = None, **kwargs) -> None:
+    def __init__(self, bot: Optional['alpha.core.client.AlphaBot'] = None, **kwargs) -> None:
         self._bot = bot
         super().__init__(**kwargs)
         self._channel = alpha.core.types.new.ChannelLogger(self, "CORE")
-        userge.core.types.new.Conversation.init(self)
+        alpha.core.types.new.Conversation.init(self)
 
     async def send(self, data: TLObject, retries: int = Session.MAX_RETRIES,
                    timeout: float = Session.WAIT_TIMEOUT, sleep_threshold: float = None):
