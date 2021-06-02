@@ -7,10 +7,10 @@ from time import time
 from git import Repo
 from git.exc import GitCommandError
 
-from petercord import alpha, Message, Config, pool
+from alpha import alpha, Message, Config, pool
 
-LOG = petercord.getLogger(__name__)
-CHANNEL = petercord.getCLogger(__name__)
+LOG = alpha.getLogger(__name__)
+CHANNEL = alpha.getCLogger(__name__)
 
 
 @alpha.on_cmd("update", about={
