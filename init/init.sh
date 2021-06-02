@@ -29,7 +29,7 @@ stopAlpha() {
 
 handleSigTerm() {
     log "Exiting With SIGTERM (143) ..."
-    stopAlphaz
+    stopAlpha
     exit 143
 }
 
@@ -39,7 +39,7 @@ handleSigInt() {
     exit 130
 }
 
-runAlphaz() {
+runAlpha() {
     initAlpha
     startAlpha "$@"
     stopAlpha
