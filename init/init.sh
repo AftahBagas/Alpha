@@ -35,7 +35,7 @@ handleSigTerm() {
 
 handleSigInt() {
     log "Exiting With SIGINT (130) ..."
-    stopAlphaz
+    stopAlpha
     exit 130
 }
 
