@@ -22,7 +22,7 @@ def _gen_string(name: str) -> str:
 
 class ChannelLogger:
     """ Channel logger for Alpha """
-    def __init__(self, client: Union['_client.Userge', '_client.AlphaBot'], name: str) -> None:
+    def __init__(self, client: Union['_client.Alpha', '_client.AlphaBot'], name: str) -> None:
         self._id = Config.LOG_CHANNEL_ID
         self._client = client
         self._string = _gen_string(name)
