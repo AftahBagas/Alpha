@@ -30,7 +30,7 @@ async def check_update(message: Message):
     flags = list(message.flags)
     pull_from_repo = False
     push_to_heroku = False
-    branch = "Alpha"
+    branch = "master"
     if "pull" in flags:
         pull_from_repo = True
         flags.remove("pull")
@@ -139,4 +139,4 @@ def _heroku_helper(sent: Message, repo: Repo, branch: str) -> None:
             userge.loop.create_task(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
 
     cur_msg = sent.text.html
-    repo.remote("heroku").push(refspec=f'{branch}:Alpha', progress=progress, force=True)
+    repo.remote("heroku").push(refspec=f'{branch}:master', progress=progress, force=True)
