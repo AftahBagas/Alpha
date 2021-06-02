@@ -2,7 +2,7 @@
 
 import aiohttp
 
-from alpha import Config, Message, logging, pool, alpha
+from alpha import Config, Message, alpha, logging, pool
 
 NEKOBIN_URL = "https://nekobin.com/"
 
