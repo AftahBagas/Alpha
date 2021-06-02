@@ -9,7 +9,7 @@ from random import choice, randint
 from alpha import Config, Message, filters, get_collection
 from alpha.utils import time_formatter
 
-CHANNEL = getCLogger(__name__)
+CHANNEL = alpha.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
 AFK_COLLECTION = get_collection("AFK")
 
