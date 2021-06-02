@@ -124,7 +124,7 @@ async def _is_admin(r_c: Union['_client.Alpha', '_client.AlphaBot'],
     return r_m.chat.id in _B_AD_CHT
 
 
-def _get_chat_member(r_c: Union['_client.Alpha', '_client.PetercordBot'],
+def _get_chat_member(r_c: Union['_client.Alpha', '_client.AlphaBot'],
                      r_m: RawMessage) -> Optional[ChatMember]:
     if r_m.chat.type in ("private", "bot"):
         return None
