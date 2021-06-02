@@ -6,9 +6,8 @@ from typing import Optional, Union
 from pyrogram.errors import ChatWriteForbidden
 from pyrogram.types import Message as RawMessage
 from pyrogram.errors.exceptions import MessageTooLong
-
 from alpha import logging, Config
-from alpha.utils import SafeDict, get_file_id_of_media, parse_buttons
+from alpha.utils import SafeDict, get_file_id, parse_buttons, rand_array
 from ..bound import message as _message  # pylint: disable=unused-import
 from ... import client as _client  # pylint: disable=unused-import
 
@@ -30,11 +29,9 @@ class ChannelLogger:
     @staticmethod
     def get_link(message_id: int) -> str:
         """\nreturns link for a specific message.
-
         Parameters:
             message_id (`int`):
                 Message id of stored message.
-
         Returns:
             str
         """
@@ -43,14 +40,11 @@ class ChannelLogger:
 
     async def log(self, text: str, name: str = '') -> int:
         """\nsend text message to log channel.
-
         Parameters:
             text (``str``):
                 Text of the message to be sent.
-
             name (``str``, *optional*):
                 New Name for logger.
-
         Returns:
             message_id on success or None
         """
@@ -73,20 +67,16 @@ class ChannelLogger:
                       name: str = '',
                       as_copy: bool = True) -> None:
         """\nforward message to log channel.
-
         Parameters:
             message (`pyrogram.Message`):
                 pass pyrogram.Message object which want to forward.
-
             name (``str``, *optional*):
                 New Name for logger.
-
             as_copy (`bool`, *optional*):
                 Pass True to forward messages without the forward header
                 (i.e.: send a copy of the message content so
                 that it appears as originally sent by you).
                 Defaults to True.
-
         Returns:
             None
         """
@@ -110,23 +100,20 @@ class ChannelLogger:
                     message: Optional['_message.Message'],
                     caption: Optional[str] = '') -> int:
         """\nstore message to log channel.
-
         Parameters:
             message (`pyrogram.Message` | `None`):
                 pass pyrogram.Message object which want to forward.
-
             caption (`str`, *optional*):
                 Text or Caption of the message to be sent.
-
         Returns:
             message_id on success or None
         """
         caption = caption or ''
         file_id = None
         if message and message.caption:
-            caption = caption + message.caption.html
+            caption = (caption + message.caption.html) if caption != message.caption.html else caption
         if message:
-            file_id = get_file_id_of_media(message)
+            file_id = get_file_id(message)
         if message and message.media and file_id:
             if caption:
                 caption = self._string.format(caption.strip())
@@ -144,28 +131,22 @@ class ChannelLogger:
                              chat_id: int,
                              user_id: int,
                              reply_to_message_id: int,
-                             del_in: int = 0) -> None:
+                             del_in: int = 0,
+                             allow_random:bool=True) -> None:
         """\nforward stored message from log channel.
-
         Parameters:
             client (`Alpha` | `AlphaBot`):
                 Pass Alpha or AlphaBot.
-
             message_id (`int`):
                 Message id of stored message.
-
             chat_id (`int`):
                 ID of chat (dest) you want to farward.
-
             user_id (`int`):
                 ID of user you want to reply.
-
             reply_to_message_id (`int`):
                 If the message is a reply, ID of the original message.
-
             del_in (`int`):
                 Time in Seconds for delete that message.
-
         Returns:
             None
         """
@@ -185,8 +166,11 @@ class ChannelLogger:
                 'chat': chat.title if chat.title else "this group",
                 'count': chat.members_count})
             caption = caption.format_map(SafeDict(**u_dict))
-        file_id = get_file_id_of_media(message)
+        file_id = get_file_id(message)
         caption, buttons = parse_buttons(caption)
+        split_char = r"%%%"
+        if allow_random and split_char in caption:
+            caption = rand_array(caption.split(split_char))
         try:
             if message.media and file_id:
                 msg = await client.send_cached_media(
