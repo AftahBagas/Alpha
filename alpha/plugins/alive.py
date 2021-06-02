@@ -59,7 +59,7 @@ def _get_alive_text_and_markup(message: Message) -> Tuple[str, Optional[InlineKe
     output = f"""**Alpha Userbot Is Running 🔥!..**\n
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
 **❍ ⏱️ • uptime** : `{alpha.uptime}`
-**❍ 🧪 • version** : `0.3.2`
+**❍ 🧪 • version** : `{get_version()}`
 **❍ 😈 • mode** : `{_get_mode()}`
 
 **❍ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
