@@ -29,5 +29,5 @@ class Restart(RawClient):  # pylint: disable=missing-class-docstring
             print(_LOG_STR % "Installing Requirements...")
             os.system(  # nosec
                 "pip3 install -U pip && pip3 install --no-cache-dir -r requirements.txt")
-        os.execl(sys.executable, sys.executable, '-m', 'userge')  # nosec
+        os.execl(sys.executable, sys.executable, '-m', 'alpha')  # nosec
         sys.exit()
