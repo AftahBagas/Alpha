@@ -136,7 +136,7 @@ def _heroku_helper(sent: Message, repo: Repo, branch: str) -> None:
         if not edited or (now - start_time) > 3 or message:
             edited = True
             start_time = now
-            userge.loop.create_task(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
+            alpha.loop.create_task(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
 
     cur_msg = sent.text.html
     repo.remote("heroku").push(refspec=f'{branch}:Alpha', progress=progress, force=True)
