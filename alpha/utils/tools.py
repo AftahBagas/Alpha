@@ -9,35 +9,21 @@ from typing import List, Optional, Tuple
 
 from html_telegraph_poster import TelegraphPoster
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from ujson import loads
 
 import alpha
 
 _LOG = alpha.logging.getLogger(__name__)
-_EMOJI_PATTERN = re.compile(
-    "["
-    "\U0001F1E0-\U0001F1FF"  # flags (iOS)
-    "\U0001F300-\U0001F5FF"  # symbols & pictographs
-    "\U0001F600-\U0001F64F"  # emoticons
-    "\U0001F680-\U0001F6FF"  # transport & map symbols
-    "\U0001F700-\U0001F77F"  # alchemical symbols
-    "\U0001F780-\U0001F7FF"  # Geometric Shapes Extended
-    "\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
-    "\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
-    "\U0001FA00-\U0001FA6F"  # Chess Symbols
-    "\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
-    "\U00002702-\U000027B0"  # Dingbats
-    "]+"
-)
+
 _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:(?:/{0,2})(.+?)(:same)?])")
 
 
-def demojify(string: str) -> str:
-    """Remove emojis and other non-safe characters from string"""
-    return re.sub(_EMOJI_PATTERN, "", string)
-
-
-def get_file_id_of_media(message: "alpha.Message") -> Optional[str]:
+def get_file_id(
+    message: "alpha.Message",
+) -> Optional[str]:
     """get file_id"""
+    if message is None:
+        return
     file_ = (
         message.audio
         or message.animation
@@ -48,9 +34,7 @@ def get_file_id_of_media(message: "alpha.Message") -> Optional[str]:
         or message.video
         or message.document
     )
-    if file_:
-        return file_.file_id
-    return None
+    return file_.file_id if file_ else None
 
 
 def humanbytes(size: float) -> str:
@@ -80,15 +64,16 @@ def time_formatter(seconds: float) -> str:
     return tmp[:-2]
 
 
+# alfareza
 def post_to_telegraph(a_title: str, content: str) -> str:
     """Create a Telegram Post using HTML Content"""
     post_client = TelegraphPoster(use_api=True)
-    auth_name = "Alpha"
+    auth_name = "Alpha Support"
     post_client.create_api_token(auth_name)
     post_page = post_client.post(
         title=a_title,
         author=auth_name,
-        author_url="https://t.me/x_xtests",
+        author_url="https://t.me/TeamSquadUserbotSupport",
         text=content,
     )
     return post_page["url"]
@@ -120,7 +105,7 @@ async def take_screen_shot(
     )
     ttl = duration // 2
     thumb_image_path = path or os.path.join(
-        userge.Config.DOWN_PATH, f"{basename(video_file)}.jpg"
+        petercord.Config.DOWN_PATH, f"{basename(video_file)}.jpg"
     )
     command = f'''ffmpeg -ss {ttl} -i "{video_file}" -vframes 1 "{thumb_image_path}"'''
     err = (await runcmd(command))[1]
@@ -155,3 +140,29 @@ def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarku
         else:
             keyb.append([InlineKeyboardButton(btn[0], url=btn[1])])
     return note_data.strip(), InlineKeyboardMarkup(keyb) if keyb else None
+
+
+# https://www.tutorialspoint.com/How-do-you-split-a-list-into-evenly-sized-chunks-in-Python
+def sublists(input_list: list, width: int = 3):
+    return [input_list[x : x + width] for x in range(0, len(input_list), width)]
+
+
+# Solves ValueError: No closing quotation by removing ' or " in file name
+def safe_filename(path_):
+    if path_ is None:
+        return
+    safename = path_.replace("'", "").replace('"', "")
+    if safename != path_:
+        os.rename(path_, safename)
+    return safename
+
+
+def clean_obj(obj, convert: bool = False):
+    if convert:
+        # Pyrogram object to python Dict
+        obj = loads(str(obj))
+    if isinstance(obj, (list, tuple)):
+        return [clean_obj(item) for item in obj]
+    if isinstance(obj, dict):
+        return {key: clean_obj(value) for key, value in obj.items() if key != "_"}
+    return obj
