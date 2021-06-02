@@ -2,4 +2,4 @@
 
 . init/init.sh
 
-runAlphaz "$@"
+runAlpha "$@"
