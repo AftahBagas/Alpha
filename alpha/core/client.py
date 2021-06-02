@@ -56,7 +56,7 @@ class _AbstractAlpha(Methods, RawClient):
         """ Load plugin to Alpha """
         _LOG.debug(_LOG_STR, f"Importing {name}")
         _IMPORTED.append(
-            importlib.import_module(f"alphaz.plugins.{name}"))
+            importlib.import_module(f"alpha.plugins.{name}"))
         if reload_plugin:
             _IMPORTED[-1] = importlib.reload(_IMPORTED[-1])
         plg = _IMPORTED[-1]
