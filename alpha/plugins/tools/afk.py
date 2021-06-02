@@ -1,4 +1,3 @@
-
 """ setup AFK mode """
 
 # alfareza
