@@ -12,7 +12,7 @@ _LEVELS = {
 
 
 @alpha.on_cmd("logs", about={
-    'header': "check alphaz logs",
+    'header': "check alpha logs",
     'flags': {
         '-h': "get heroku logs",
         '-l': "heroku logs lines limit : default 100"}}, allow_channels=False)
@@ -33,13 +33,17 @@ async def check_logs(message: Message):
     await message.delete()
 
 
-@alpha.on_cmd("setlvl", about={
-    'header': "set logger level, default to info",
-    'types': ['debug', 'info', 'warning', 'error', 'critical'],
-    'usage': "{tr}setlvl [level]",
-    'examples': ["{tr}setlvl info", "{tr}setlvl debug"]})
+@alpha.on_cmd(
+    "setlvl",
+    about={
+        "header": "set logger level, default to info",
+        "types": ["debug", "info", "warning", "error", "critical"],
+        "usage": "{tr}setlvl [level]",
+        "examples": ["{tr}setlvl info", "{tr}setlvl debug"],
+    },
+)
 async def set_level(message: Message):
-    """ set logger level """
+    """set logger level"""
     await message.edit("`setting logger level ...`")
     level = message.input_str.lower()
     if level not in _LEVELS:
@@ -47,4 +51,6 @@ async def set_level(message: Message):
         return
     for logger in (logging.getLogger(name) for name in logging.root.manager.loggerDict):
         logger.setLevel(_LEVELS[level])
-    await message.edit(f"`successfully set logger level as` : **{level.upper()}**", del_in=3
+    await message.edit(
+        f"`successfully set logger level as` : **{level.upper()}**", del_in=3
+    )
