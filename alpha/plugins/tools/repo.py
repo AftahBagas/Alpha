@@ -10,7 +10,7 @@ async def see_repo(message: Message):
 __Repo Userbot__ 😈 **Alpha** 😈
     __Tahan lama sebagai seorang Serge__
     __The Userbot Plugins__
-• **Version** : `{get_version()}`
+• **Version** : `{get_versions()}`
 • **License** : {versions.__license__}
 • **Copyright** : {versions.__copyright__}
 • **Repo** : [Alpha]({Config.UPSTREAM_REPO})
