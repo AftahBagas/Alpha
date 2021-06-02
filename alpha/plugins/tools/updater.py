@@ -18,7 +18,7 @@ CHANNEL = alpha.getCLogger(__name__)
     'flags': {
         '-pull': "pull updates",
         '-push': "push updates to heroku",
-        '-alpha': "select Alpha branch"},
+        '-Alpha': "select Alpha branch"},
     'usage': "{tr}update : check updates from master branch\n"
              "{tr}update -[branch_name] : check updates from any branch\n"
              "add -pull if you want to pull updates\n"
@@ -139,4 +139,4 @@ def _heroku_helper(sent: Message, repo: Repo, branch: str) -> None:
             userge.loop.create_task(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
 
     cur_msg = sent.text.html
-    repo.remote("heroku").push(refspec=f'{branch}:master', progress=progress, force=True)
+    repo.remote("heroku").push(refspec=f'{branch}:Alpha', progress=progress, force=True)
