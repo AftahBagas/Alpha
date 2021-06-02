@@ -176,4 +176,4 @@ I'll get back to you later.",
     "I bet you were expecting an away message!",
     "Life is so short, there are so many things to do...\nI'm away doing one of them..",
     "I am not here right now...\nbut if I was...\n\nwouldn't that be awesome?")
-© 2021 GitHub, Inc.
+
