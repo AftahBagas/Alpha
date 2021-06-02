@@ -298,7 +298,7 @@ class RawDecorator(RawClient):
                                     if isinstance(r_c, _client.AlphaBot):
                                         return
                                 elif await _bot_is_present(r_c, r_m):
-                                    if isinstance(r_c, _client.Userge):
+                                    if isinstance(r_c, _client.Alpha):
                                         return
                 if flt.check_downpath and not os.path.isdir(Config.DOWN_PATH):
                     os.makedirs(Config.DOWN_PATH)
