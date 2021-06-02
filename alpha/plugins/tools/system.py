@@ -168,7 +168,7 @@ async def setvar_(message: Message) -> None:
     heroku_vars[var_name] = var_data
 
 
-@alphaz.on_cmd(
+@alpha.on_cmd(
     "delvar",
     about={
         "header": "del var in heroku",
