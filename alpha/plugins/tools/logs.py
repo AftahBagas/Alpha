@@ -1,35 +1,43 @@
 # alfareza
 
-from alpha import alpha, Message, logging, Config, pool
+from alpha import Config, Message, alpha, logging, pool
 
 _LEVELS = {
-    'debug': logging.DEBUG,
-    'info': logging.INFO,
-    'warning': logging.WARNING,
-    'error': logging.ERROR,
-    'critical': logging.CRITICAL
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warning": logging.WARNING,
+    "error": logging.ERROR,
+    "critical": logging.CRITICAL,
 }
 
 
-@alpha.on_cmd("logs", about={
-    'header': "check alpha logs",
-    'flags': {
-        '-h': "get heroku logs",
-        '-l': "heroku logs lines limit : default 100"}}, allow_channels=False)
+@alpha.on_cmd(
+    "logs",
+    about={
+        "header": "check alpha logs",
+        "flags": {
+            "-h": "get heroku logs",
+            "-l": "heroku logs lines limit : default 100",
+        },
+    },
+    allow_channels=False,
+)
 async def check_logs(message: Message):
-    """ check logs """
+    """check logs"""
     await message.edit("`checking logs ...`")
-    if '-h' in message.flags and Config.HEROKU_APP:
-        limit = int(message.flags.get('-l', 100))
+    if "-h" in message.flags and Config.HEROKU_APP:
+        limit = int(message.flags.get("-l", 100))
         logs = await pool.run_in_thread(Config.HEROKU_APP.get_log)(lines=limit)
-        await message.client.send_as_file(chat_id=message.chat.id,
-                                          text=logs,
-                                          filename='alpha-heroku.log',
-                                          caption=f'alpha-heroku.log [ {limit} lines ]')
+        await message.client.send_as_file(
+            chat_id=message.chat.id,
+            text=logs,
+            filename="alpha-heroku.log",
+            caption=f"alpha-heroku.log [ {limit} lines ]",
+        )
     else:
-        await message.client.send_document(chat_id=message.chat.id,
-                                           document="logs/alpha.log",
-                                           caption='alpha.log')
+        await message.client.send_document(
+            chat_id=message.chat.id, document="logs/alpha.log", caption="alpha.log"
+        )
     await message.delete()
 
 

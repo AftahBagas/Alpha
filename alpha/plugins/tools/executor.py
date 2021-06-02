@@ -2,38 +2,46 @@
 
 # alfareza
 
-import io
-import sys
 import asyncio
+import io
 import keyword
+import sys
 import traceback
 from getpass import getuser
 from os import geteuid
 
-from alpha import alpha, Message, Config
+from alpha import Config, Message, alpha
 from alpha.utils import runcmd
 
 
-@alpha.on_cmd("eval", about={
-    'header': "run python code line | lines",
-    'flags': {'-s': "silent mode (hide STDIN)"},
-    'usage': "{tr}eval [flag] [code lines]",
-    'examples': [
-        "{tr}eval print('Alpha')", "{tr}eval -s print('Alpha')",
-        "{tr}eval 5 + 6", "{tr}eval -s 5 + 6"]}, allow_channels=False)
+@alpha.on_cmd(
+    "eval",
+    about={
+        "header": "run python code line | lines",
+        "flags": {"-s": "silent mode (hide STDIN)"},
+        "usage": "{tr}eval [flag] [code lines]",
+        "examples": [
+            "{tr}eval print('Alpha')",
+            "{tr}eval -s print('Alpha')",
+            "{tr}eval 5 + 6",
+            "{tr}eval -s 5 + 6",
+        ],
+    },
+    allow_channels=False,
+)
 async def eval_(message: Message):
-    """ run python code """
+    """run python code"""
     cmd = await init_func(message)
     if cmd is None:
         return
     silent_mode = False
-    if cmd.startswith('-s'):
+    if cmd.startswith("-s"):
         silent_mode = True
         cmd = cmd[2:].strip()
     if not cmd:
         await message.err("Unable to Parse Input!")
         return
-    await message.edit("`Executing eval ...`", parse_mode='md')
+    await message.edit("`Executing eval ...`", parse_mode="md")
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = io.StringIO()
@@ -42,16 +50,22 @@ async def eval_(message: Message):
 
     async def aexec(code):
         head = "async def __aexec(alphaz, message):\n "
-        if '\n' in code:
-            rest_code = '\n '.join(iter(code.split('\n')))
-        elif (any(True for k_ in keyword.kwlist
-                  if k_ not in ('True', 'False', 'None') and code.startswith(f"{k_} "))
-              or '=' in code):
+        if "\n" in code:
+            rest_code = "\n ".join(iter(code.split("\n")))
+        elif (
+            any(
+                True
+                for k_ in keyword.kwlist
+                if k_ not in ("True", "False", "None") and code.startswith(f"{k_} ")
+            )
+            or "=" in code
+        ):
             rest_code = f"\n {code}"
         else:
             rest_code = f"\n return {code}"
         exec(head + rest_code)  # nosec pylint: disable=W0122
-        return await locals()['__aexec'](alphaz, message)
+        return await locals()["__aexec"](alphaz, message)
+
     try:
         ret_val = await aexec(cmd)
     except Exception:  # pylint: disable=broad-except
@@ -67,20 +81,24 @@ async def eval_(message: Message):
     if evaluation is not None:
         output += f"**>>** ```{evaluation}```"
     if output:
-        await message.edit_or_send_as_file(text=output,
-                                           parse_mode='md',
-                                           filename="eval.txt",
-                                           caption=cmd)
+        await message.edit_or_send_as_file(
+            text=output, parse_mode="md", filename="eval.txt", caption=cmd
+        )
     else:
         await message.delete()
 
 
-@alpha.on_cmd("exec", about={
-    'header': "run commands in exec",
-    'usage': "{tr}exec [commands]",
-    'examples': "{tr}exec echo \"Alphaz\""}, allow_channels=False)
+@alpha.on_cmd(
+    "exec",
+    about={
+        "header": "run commands in exec",
+        "usage": "{tr}exec [commands]",
+        "examples": '{tr}exec echo "Alphaz"',
+    },
+    allow_channels=False,
+)
 async def exec_(message: Message):
-    """ run commands in exec """
+    """run commands in exec"""
     cmd = await init_func(message)
     if cmd is None:
         return
@@ -96,18 +114,22 @@ async def exec_(message: Message):
     output = f"**EXEC**:\n\n\
 __Command:__\n`{cmd}`\n__PID:__\n`{pid}`\n__RETURN:__\n`{ret}`\n\n\
 **stderr:**\n`{err}`\n\n**stdout:**\n``{out}`` "
-    await message.edit_or_send_as_file(text=output,
-                                       parse_mode='md',
-                                       filename="exec.txt",
-                                       caption=cmd)
+    await message.edit_or_send_as_file(
+        text=output, parse_mode="md", filename="exec.txt", caption=cmd
+    )
 
 
-@alpha.on_cmd("term", about={
-    'header': "run commands in shell (terminal)",
-    'usage': "{tr}term [commands]",
-    'examples': "{tr}term echo \"Alpha\""}, allow_channels=False)
+@alpha.on_cmd(
+    "term",
+    about={
+        "header": "run commands in shell (terminal)",
+        "usage": "{tr}term [commands]",
+        "examples": '{tr}term echo "Alpha"',
+    },
+    allow_channels=False,
+)
 async def term_(message: Message):
-    """ run commands in shell (terminal with live update) """
+    """run commands in shell (terminal with live update)"""
     cmd = await init_func(message)
     if cmd is None:
         return
@@ -134,10 +156,11 @@ async def term_(message: Message):
         if count >= Config.EDIT_SLEEP_TIMEOUT * 2:
             count = 0
             out_data = f"<pre>{output}{t_obj.read_line}</pre>"
-            await message.try_to_edit(out_data, parse_mode='html')
+            await message.try_to_edit(out_data, parse_mode="html")
     out_data = f"<pre>{output}{t_obj.get_output}</pre>"
     await message.edit_or_send_as_file(
-        out_data, parse_mode='html', filename="term.txt", caption=cmd)
+        out_data, parse_mode="html", filename="term.txt", caption=cmd
+    )
 
 
 async def init_func(message: Message):
@@ -152,13 +175,14 @@ async def init_func(message: Message):
 
 
 class Term:
-    """ live update term class """
+    """live update term class"""
+
     def __init__(self, process: asyncio.subprocess.Process) -> None:
         self._process = process
-        self._stdout = b''
-        self._stderr = b''
-        self._stdout_line = b''
-        self._stderr_line = b''
+        self._stdout = b""
+        self._stderr = b""
+        self._stdout_line = b""
+        self._stderr_line = b""
         self._finished = False
 
     def cancel(self) -> None:
@@ -170,11 +194,11 @@ class Term:
 
     @property
     def read_line(self) -> str:
-        return (self._stdout_line + self._stderr_line).decode('utf-8').strip()
+        return (self._stdout_line + self._stderr_line).decode("utf-8").strip()
 
     @property
     def get_output(self) -> str:
-        return (self._stdout + self._stderr).decode('utf-8').strip()
+        return (self._stdout + self._stderr).decode("utf-8").strip()
 
     async def _read_stdout(self) -> None:
         while True:
@@ -200,9 +224,10 @@ class Term:
         self._finished = True
 
     @classmethod
-    async def execute(cls, cmd: str) -> 'Term':
+    async def execute(cls, cmd: str) -> "Term":
         process = await asyncio.create_subprocess_shell(
-            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        )
         t_obj = cls(process)
         asyncio.get_event_loop().create_task(t_obj.worker())
         return t_obj

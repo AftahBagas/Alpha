@@ -1,9 +1,9 @@
 # alfareza
 
-from alpha import alpha, Message, Config, versions, get_version
+from alpha import Config, Message, alpha, versions
 
 
-@alpha.on_cmd("repo", about={'header': "get repo link and details"})
+@alpha.on_cmd("repo", about={"header": "get repo link and details"})
 async def see_repo(message: Message):
     """see repo"""
     output = f"""

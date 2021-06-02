@@ -1,9 +1,9 @@
 # alfareza
 
-from alpha import alpha, Message
+from alpha import Message, alpha
 
 
-@alpha.on_cmd("del", about={'header': "delete replied message"})
+@alpha.on_cmd("del", about={"header": "delete replied message"})
 async def del_msg(message: Message):
     msg_ids = [message.message_id]
     if message.reply_to_message:
