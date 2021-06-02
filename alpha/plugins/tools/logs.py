@@ -1,6 +1,10 @@
 # alfareza
 
-from alpha import Config, Message, alpha, logging, pool
+import aiohttp
+
+from alpha import Config, Message, logging, pool, alpha
+
+NEKOBIN_URL = "https://nekobin.com/"
 
 _LEVELS = {
     "debug": logging.DEBUG,
@@ -14,8 +18,9 @@ _LEVELS = {
 @alpha.on_cmd(
     "logs",
     about={
-        "header": "check alpha logs",
+        "header": "check Alpha logs",
         "flags": {
+            "-d": "get logs in document",
             "-h": "get heroku logs",
             "-l": "heroku logs lines limit : default 100",
         },
@@ -34,11 +39,38 @@ async def check_logs(message: Message):
             filename="alpha-heroku.log",
             caption=f"alpha-heroku.log [ {limit} lines ]",
         )
+    elif "-d" not in message.flags:
+        with open("logs/alpha.log", "r") as d_f:
+            text = d_f.read()
+        async with aiohttp.ClientSession() as ses:
+            async with ses.post(
+                NEKOBIN_URL + "api/documents", json={"content": text}
+            ) as resp:
+                if resp.status == 201:
+                    response = await resp.json()
+                    key = response["result"]["key"]
+                    file_ext = ".txt"
+                    final_url = NEKOBIN_URL + key + file_ext
+                    final_url_raw = f"{NEKOBIN_URL}raw/{key}{file_ext}"
+                    reply_text = "**Here Are Your Logs** :\n"
+                    reply_text += (
+                        f"• [NEKO]({final_url})            • [RAW]({final_url_raw})"
+                    )
+                    await message.edit(reply_text, disable_web_page_preview=True)
+                else:
+                    await message.edit("Failed to reach Nekobin !")
+                    await message.client.send_document(
+                        chat_id=message.chat.id,
+                        document="logs/alpha.log",
+                        caption="**Alpha Logs**",
+                    )
     else:
+        await message.delete()
         await message.client.send_document(
-            chat_id=message.chat.id, document="logs/alpha.log", caption="alpha.log"
+            chat_id=message.chat.id,
+            document="logs/alpha.log",
+            caption="**Alpha Logs**",
         )
-    await message.delete()
 
 
 @alpha.on_cmd(
