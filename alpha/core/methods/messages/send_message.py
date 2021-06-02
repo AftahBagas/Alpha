@@ -35,7 +35,7 @@ class SendMessage(RawClient):  # pylint: disable=missing-class-docstring
                            ) -> Union['types.bound.Message', bool]:
         """\nSend text messages.
         Example:
-                @alpha.send_message(chat_id=12345, text='test')
+                @Alpha.send_message(chat_id=12345, text='test')
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
