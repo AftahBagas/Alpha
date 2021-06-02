@@ -105,7 +105,7 @@ async def take_screen_shot(
     )
     ttl = duration // 2
     thumb_image_path = path or os.path.join(
-        petercord.Config.DOWN_PATH, f"{basename(video_file)}.jpg"
+        alpha.Config.DOWN_PATH, f"{basename(video_file)}.jpg"
     )
     command = f'''ffmpeg -ss {ttl} -i "{video_file}" -vframes 1 "{thumb_image_path}"'''
     err = (await runcmd(command))[1]
