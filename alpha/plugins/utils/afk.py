@@ -1,14 +1,12 @@
-
-
 """ setup AFK mode """
 
 # Alireza
 
-import time
 import asyncio
+import time
 from random import choice, randint
 
-from alpha import alpha, Message, filters, Config, get_collection
+from alpha import Config, Message, alpha, filters, get_collection
 from alpha.utils import time_formatter
 
 CHANNEL = alpha.getCLogger(__name__)

@@ -123,4 +123,3 @@ class AioHttp:
         if headers_:
             if raw:
                 return headers_
-            text = ""
