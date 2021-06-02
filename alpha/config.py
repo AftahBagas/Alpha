@@ -9,7 +9,7 @@ import heroku3
 from git import Repo
 from pyrogram import filters
 
-from alphaz import logging, logbot
+from alpha import logging, logbot
 from . import versions
 
 _REPO = Repo()
@@ -18,7 +18,7 @@ logbot.reply_last_msg("Setting Configs ...")
 
 
 class Config:
-    """ Configs to setup AlphaZ Plugins """
+    """ Configs to setup Alpha """
     API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")
     WORKERS = int(os.environ.get("WORKERS")) or os.cpu_count() + 4
