@@ -18,7 +18,7 @@ initAlpha() {
 
 startAlpha() {
     startLogBotPolling
-    runPythonModule alpha "$@"
+    runPythonModule Alpha "$@"
 }
 
 stopAlpha() {
