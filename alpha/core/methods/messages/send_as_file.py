@@ -27,7 +27,7 @@ class SendAsFile(RawClient):  # pylint: disable=missing-class-docstring
                            reply_to_message_id: Optional[int] = None) -> 'types.bound.Message':
         """\nYou can send large outputs as file
         Example:
-                @alpha.send_as_file(chat_id=12345, text="hello")
+                @Alpha.send_as_file(chat_id=12345, text="hello")
         Parameters:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
