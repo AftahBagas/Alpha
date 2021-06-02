@@ -12,7 +12,7 @@ from typing import List, Dict, Union, Any, Callable, Optional
 from pyrogram import StopPropagation, ContinuePropagation
 from pyrogram.filters import Filter as RawFilter
 from pyrogram.types import Message as RawMessage, ChatMember
-from pyrogram.errors.exceptions.bad_request_400 import ChatAdminRequired, PeerIdInvalid
+from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
 
 from alpha import logging, Config
 from ...ext import RawClient
@@ -102,17 +102,13 @@ async def _init(r_c: Union['_client.Alpha', '_client.AlphaBot'],
                 _U_ID = (await r_c.ubot.get_me()).id
 
 
-async def _raise_func(r_c: Union['_client.Alpha', '_client.AlphaBot'],
-                      chat_id: int, message_id: int, text: str) -> None:
-    try:
-        _sent = await r_c.send_message(
-            chat_id=chat_id,
-            text=f"< **ERROR** : {text} ! >",
-            reply_to_message_id=message_id)
-        await asyncio.sleep(5)
-        await _sent.delete()
-    except ChatAdminRequired:
-        pass
+async def _raise_func(r_c: Union['_client.Petercord', '_client.AlphaBot'],
+                      r_m: RawMessage, text: str) -> None:
+    # pylint: disable=protected-access
+    if r_m.chat.type in ("private", "bot"):
+        await r_m.reply(f"< **ERROR**: {text} ! >")
+    else:
+        await r_c._channel.log(f"{text}\nCaused By: [link]({r_m.link})", "ERROR")
 
 
 async def _is_admin(r_c: Union['_client.Alpha', '_client.AlphaBot'],
@@ -128,7 +124,7 @@ async def _is_admin(r_c: Union['_client.Alpha', '_client.AlphaBot'],
     return r_m.chat.id in _B_AD_CHT
 
 
-def _get_chat_member(r_c: Union['_client.Alpha', '_client.AlphaBot'],
+def _get_chat_member(r_c: Union['_client.Alpha', '_client.PetercordBot'],
                      r_m: RawMessage) -> Optional[ChatMember]:
     if r_m.chat.type in ("private", "bot"):
         return None
@@ -151,7 +147,7 @@ async def _get_lock(key: str) -> asyncio.Lock:
 async def _bot_is_present(r_c: Union['_client.Alpha', '_client.AlphaBot'],
                           r_m: RawMessage) -> bool:
     global _TASK_2_START_TO  # pylint: disable=global-statement
-    if isinstance(r_c, _client.Userge):
+    if isinstance(r_c, _client.Alpha):
         if round(time.time() - _TASK_2_START_TO) > 10:
             try:
                 chats = await r_c.get_common_chats(_B_ID)
@@ -209,7 +205,7 @@ async def _both_have_perm(flt: Union['types.raw.Command', 'types.raw.Filter'],
 
 
 class RawDecorator(RawClient):
-    """ alpha raw decoretor """
+    """ userge raw decoretor """
     _PYRORETTYPE = Callable[[_PYROFUNC], _PYROFUNC]
 
     def __init__(self, **kwargs) -> None:
@@ -232,7 +228,7 @@ class RawDecorator(RawClient):
                 if r_m.chat and r_m.chat.id in Config.DISABLED_CHATS:
                     return
                 await _init(r_c, r_m)
-                _raise = partial(_raise_func, r_c, r_m.chat.id, r_m.message_id)
+                _raise = partial(_raise_func, r_c, r_m)
                 if r_m.chat and r_m.chat.type not in flt.scope:
                     if isinstance(flt, types.raw.Command):
                         await _raise(f"`invalid chat type [{r_m.chat.type}]`")
@@ -242,66 +238,68 @@ class RawDecorator(RawClient):
                         await _raise("`chat admin required`")
                     return
                 if r_m.chat and flt.check_perm:
-                    is_admin = await _is_admin(r_c, r_m)
-                    c_m = _get_chat_member(r_c, r_m)
-                    if not c_m:
-                        if isinstance(flt, types.raw.Command):
-                            await _raise(f"`invalid chat type [{r_m.chat.type}]`")
-                        return
-                    if c_m.status != "creator":
-                        if flt.check_change_info_perm and not c_m.can_change_info:
+                    if not (r_m.chat.type in ("private", "bot") and flt.check_pin_perm):
+                        is_admin = await _is_admin(r_c, r_m)
+                        c_m = _get_chat_member(r_c, r_m)
+                        if not c_m:
                             if isinstance(flt, types.raw.Command):
-                                await _raise("`required permisson [change_info]`")
+                                await _raise(f"`invalid chat type [{r_m.chat.type}]`")
                             return
-                        if flt.check_edit_perm and not c_m.can_edit_messages:
-                            if isinstance(flt, types.raw.Command):
-                                await _raise("`required permisson [edit_messages]`")
-                            return
-                        if flt.check_delete_perm and not c_m.can_delete_messages:
-                            if isinstance(flt, types.raw.Command):
-                                await _raise("`required permisson [delete_messages]`")
-                            return
-                        if flt.check_restrict_perm and not c_m.can_restrict_members:
-                            if isinstance(flt, types.raw.Command):
-                                if is_admin:
-                                    await _raise("`required permisson [restrict_members]`")
-                                else:
-                                    await _raise("`chat admin required`")
-                            return
-                        if flt.check_promote_perm and not c_m.can_promote_members:
-                            if isinstance(flt, types.raw.Command):
-                                if is_admin:
-                                    await _raise("`required permisson [promote_members]`")
-                                else:
-                                    await _raise("`chat admin required`")
-                            return
-                        if flt.check_invite_perm and not c_m.can_invite_users:
-                            if isinstance(flt, types.raw.Command):
-                                await _raise("`required permisson [invite_users]`")
-                            return
-                        if flt.check_pin_perm and not c_m.can_pin_messages:
-                            if isinstance(flt, types.raw.Command):
-                                await _raise("`required permisson [pin_messages]`")
-                            return
-                if RawClient.DUAL_MODE:
-                    if (flt.check_client
-                            or (r_m.from_user and r_m.from_user.id in Config.SUDO_USERS)):
-                        cond = True
-                        async with await _get_lock(str(flt)):
-                            if flt.only_admins:
-                                cond = cond and await _both_are_admins(r_c, r_m)
-                            if flt.check_perm:
-                                cond = cond and await _both_have_perm(flt, r_c, r_m)
-                            if cond:
-                                if Config.USE_USER_FOR_CLIENT_CHECKS:
-                                    # pylint: disable=protected-access
-                                    if isinstance(r_c, _client.AlphaBot):
-                                        return
-                                elif await _bot_is_present(r_c, r_m):
-                                    if isinstance(r_c, _client.Alpha):
-                                        return
-                if flt.check_downpath and not os.path.isdir(Config.DOWN_PATH):
-                    os.makedirs(Config.DOWN_PATH)
+                        if c_m.status != "creator":
+                            if flt.check_change_info_perm and not c_m.can_change_info:
+                                if isinstance(flt, types.raw.Command):
+                                    await _raise("`required permisson [change_info]`")
+                                return
+                            if flt.check_edit_perm and not c_m.can_edit_messages:
+                                if isinstance(flt, types.raw.Command):
+                                    await _raise("`required permisson [edit_messages]`")
+                                return
+                            if flt.check_delete_perm and not c_m.can_delete_messages:
+                                if isinstance(flt, types.raw.Command):
+                                    await _raise("`required permisson [delete_messages]`")
+                                return
+                            if flt.check_restrict_perm and not c_m.can_restrict_members:
+                                if isinstance(flt, types.raw.Command):
+                                    if is_admin:
+                                        await _raise("`required permisson [restrict_members]`")
+                                    else:
+                                        await _raise("`chat admin required`")
+                                return
+                            if flt.check_promote_perm and not c_m.can_promote_members:
+                                if isinstance(flt, types.raw.Command):
+                                    if is_admin:
+                                        await _raise("`required permisson [promote_members]`")
+                                    else:
+                                        await _raise("`chat admin required`")
+                                return
+                            if flt.check_invite_perm and not c_m.can_invite_users:
+                                if isinstance(flt, types.raw.Command):
+                                    await _raise("`required permisson [invite_users]`")
+                                return
+                            if flt.check_pin_perm and not c_m.can_pin_messages:
+                                if isinstance(flt, types.raw.Command):
+                                    await _raise("`required permisson [pin_messages]`")
+                                return
+                if RawClient.DUAL_MODE and (flt.check_client or (
+                        r_m.from_user and r_m.from_user.id in Config.SUDO_USERS)):
+                    cond = True
+                    async with await _get_lock(str(flt)):
+                        if flt.only_admins:
+                            cond = cond and await _both_are_admins(r_c, r_m)
+                        if flt.check_perm:
+                            cond = cond and await _both_have_perm(flt, r_c, r_m)
+                        if cond:
+                            if Config.USE_USER_FOR_CLIENT_CHECKS:
+                                if isinstance(r_c, _client.AlphaBot):
+                                    return
+                            elif await _bot_is_present(r_c, r_m) and isinstance(
+                                    r_c, _client.Alpha):
+                                return
+                if flt.check_downpath:
+                    if not os.path.isdir(Config.DOWN_PATH):
+                        os.makedirs(Config.DOWN_PATH)
+                    if not os.path.isdir(Config.CACHE_PATH):
+                        os.makedirs(Config.CACHE_PATH)
                 try:
                     await func(types.bound.Message.parse(
                         r_c, r_m, module=func.__module__, **kwargs))
@@ -314,7 +312,6 @@ class RawDecorator(RawClient):
                                             f"**ERROR** : `{f_e or None}`\n"
                                             f"\n```{format_exc().strip()}```",
                                             "TRACEBACK")
-                    await _raise(f"`{f_e}`\n__see logs for more info__")
             flt.update(func, template)
             self.manager.get_plugin(func.__module__).add(flt)
             _LOG.debug(_LOG_STR, f"Imported => [ async def {func.__name__}(message) ] "
