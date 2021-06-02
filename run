@@ -1,5 +1,36 @@
 # alfareza
 
-. init/init.sh
+trap joinProc INT TERM
 
-runalpha "$@"
+declare -i bgProc
+declare -ir usr1=138
+declare -r cmd='. init/init.sh; runAlpha "$@"'
+
+setProc() {
+    bgProc=$1
+}
+
+waitProc() {
+    wait $bgProc
+}
+
+killProc() {
+    kill $bgProc &> /dev/null
+}
+
+joinProc() {
+    if test $bgProc; then
+        killProc
+        waitProc
+    fi
+}
+
+run() {
+    joinProc
+    bash -c "$cmd" $0 "$@" &
+    setProc $!
+    waitProc
+    test $? -eq $usr1 && run "$@"
+}
+
+run "$@"
