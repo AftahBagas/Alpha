@@ -104,7 +104,7 @@ class AlphaBot(_AbstractAlpha):
         super().__init__(session_name=":memory:", **kwargs)
 
     @property
-    def ubot(self) -> 'alphaz':
+    def ubot(self) -> 'alpha':
         """ returns userbot """
         return self._bot
 
