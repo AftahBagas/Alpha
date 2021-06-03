@@ -34,7 +34,7 @@ async def _init() -> None:
             except Exception as u_rr:
                 LOGGER.debug(u_rr)
             try:
-                if petercord.has_bot:
+                if alpha.has_bot:
                     _BOT_CACHED_MEDIA = get_file_id(
                         await alpha.bot.get_messages(am_link[0], am_link[1])
                     )
@@ -86,17 +86,6 @@ async def send_alive_message(message: Message) -> None:
     chat_id = message.chat.id
     client = message.client
     caption = Bot_Alive.alive_info()
-    if client.is_bot:
-        reply_markup = Bot_Alive.alive_buttons()
-        file_id = _BOT_CACHED_MEDIA
-    else:
-        reply_markup = None
-        file_id = _USER_CACHED_MEDIA
-        caption += (
-            f"\n⚡️  <a href={Config.UPSTREAM_REPO}><b>REPO</b></a>"
-            "    <code>|</code>    "
-            "🎖  <a href='https://t.me/diemmmmmmmmmm'><b>OWNERS</b></a>"
-        )
     if not Config.ALIVE_MEDIA:
         await client.send_photo(
             chat_id,
@@ -154,51 +143,6 @@ async def send_alive_message(message: Message) -> None:
                         _USER_CACHED_MEDIA = refeshed_f_id
 
 
-if alpha.has_bot:
-
-    @alpha.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
-    async def alive_cb(_, c_q: CallbackQuery):
-        allow = bool(
-            c_q.from_user
-            and (
-                c_q.from_user.id in Config.OWNER_ID
-                or c_q.from_user.id in Config.SUDO_USERS
-            )
-        )
-        if allow:
-            start = datetime.now()
-            try:
-                await c_q.edit_message_text(
-                    Bot_Alive.alive_info(),
-                    reply_markup=Bot_Alive.alive_buttons(),
-                    disable_web_page_preview=True,
-                )
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            except BadRequest:
-                pass
-            ping = "𝗣𝗶𝗻𝗴:  🎖  {} sec\n"
-        alive_s = "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
-            _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
-        )
-        alive_s += f"🎖 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
-        alive_s += f"🎖 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
-        if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
-            alive_s += "🎖 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
-        alive_s += f"🎖 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
-        alive_s += f"🎖 𝗣𝗠 𝗚𝘂𝗮𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
-        alive_s += f"🎖 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
-        if allow:
-            end = datetime.now()
-            m_s = (end - start).microseconds / 1000
-            await c_q.answer(ping.format(m_s) + alive_s, show_alert=True)
-        else:
-            await c_q.answer(alive_s, show_alert=True)
-        await asyncio.sleep(0.5)
-
-
-def _parse_arg(arg: bool) -> str:
-    return " ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else " ❌ 𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
 
 
 class Bot_Alive:
@@ -226,32 +170,35 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info() -> str:
-        alive_info_ = f"""
-<a href="https://telegram.dog/x_xtests"><b>PETERCORD</a> is Up and Running.</b>
-  🎖   <b>Python :</b>    <code>v{versions.__python_version__}</code>
-  🎖   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
-  🎖   <b>𝑿 :</b>    <code>v{get_version()}</code>
-<b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{alpha.uptime}</b>
+        alive_info_ =  f"""**Alpha Z Plugins Is Running 🔥!..**\n
+**╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
+**❍ ⏱️ • uptime** : `{alphaz.uptime}`
+**❍ 🧪 • version** : `{get_version()}`
+**❍ 😈 • mode** : `{_get_mode()}`
+**❍ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
+**❍ ⚙️ • Pm-Guard**: `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
+**❍ 🖐️ • Anti-Spam**: `{_parse_arg(Config.ANTISPAM_SENTRY)}`"""
+    if Config.HEROKU_APP:
+        output += f"\n❍ **🌐 • Dyno-saver**: `{_parse_arg(Config.RUN_DYNO_SAVER)}`"
+    output += f"""
+**❍ 🚀 • Unofficial**: `{_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}`
+  🐍**__Python__**: `{versions.__python_version__}`
+  💻**__Pyrogram__**: `{versions.__pyro_version__}`
+\n**╰━─━─━─━─━─━─━─━─━─━╯**"""
+    if not message.client.is_bot:
+        output += f"""\n
+🎖 **{versions.__license__}** | 😈 **{versions.__copyright__}** | 🔮 **[Repo]({Config.UPSTREAM_REPO})**
 """
-        return alive_info_
-
-    @staticmethod
-    def _get_mode() -> str:
-        if RawClient.DUAL_MODE:
-            return "↕️  DUAL"
-        if Config.BOT_TOKEN:
-            return "🎖  BOT"
-        return "🎖  USER"
-
-    @staticmethod
-    def alive_buttons() -> InlineKeyboardMarkup:
-        buttons = [
+    else:
+        copy_ = "https://github.com/AftahBagas/AlphaZ-Plugins/blob/alpha/LICENSE"
+        markup = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
-                InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
-            ]
-        ]
-        return InlineKeyboardMarkup(buttons)
+                InlineKeyboardButton(text="😈 Github", url="https://github.com/AftahBagas"),
+                InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO)
+            ],
+            [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)]
+        ])
+    return output, markup
 
     @staticmethod
     def alive_default_imgs() -> str:
