@@ -15,9 +15,9 @@ async def genStrSession() -> None:  # pylint: disable=missing-function-docstring
             "Alpha",
             api_id=int(os.environ.get("API_ID") or input("Enter Telegram APP ID: ")),
             api_hash=os.environ.get("API_HASH") or input("Enter Telegram API HASH: ")
-    ) as alphaz:
+    ) as alpha:
         print("\nprocessing...")
-        await alphaz.send_message(
+        await alpha.send_message(
             "me", f"#ALPHA #HU_STRING_SESSION\n\n```{await alphaz.export_session_string()}```")
         print("Done !, session string has been sent to saved messages!")
 
