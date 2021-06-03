@@ -7,6 +7,7 @@ import pybase64
 from alpha import Message
 from alpha.utils import runcmd
 
+
 @alpha.on_cmd(
     "hash",
     about={
@@ -15,8 +16,6 @@ from alpha.utils import runcmd
         "usage": "{tr}hash [text or reply to msg]",
     },
 )
-
-
 async def gethash(message: Message):
     """find hash of text"""
     input_ = message.input_or_reply_str
@@ -46,8 +45,6 @@ async def gethash(message: Message):
     },
     del_pre=True,
 )
-
-
 async def endecrypt(message: Message):
     """encode or decode"""
     if message.reply_to_message:
