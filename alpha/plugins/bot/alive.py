@@ -75,7 +75,7 @@ async def send_inline_alive(message: Message) -> None:
         return
     await message.delete()
     await asyncio.sleep(200)
-    await petercord.delete_messages(message.chat.id, i_res_id)
+    await alpha.delete_messages(message.chat.id, i_res_id)
 
 
 async def send_alive_message(message: Message) -> None:
@@ -197,7 +197,6 @@ class Bot_Alive:
                 ],
                 [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)],
             ]
-            return InlineKeyboardMarkup(buttons)
 
     @staticmethod
     def alive_default_imgs() -> str:
