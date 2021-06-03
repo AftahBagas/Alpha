@@ -41,7 +41,7 @@ QUEUE: List[Message] = []
 BACK_BUTTON_TEXT = ""
 CQ_MSG: List[RawMessage] = []
 
-call = GroupCall(userge, play_on_repeat=False)
+call = GroupCall(alpha, play_on_repeat=False)
 
 yt_regex = re.compile(
     r'(https?://)?(www\.)?'
@@ -490,7 +490,7 @@ async def nsc_handler(c: GroupCall, connected: bool):
     if os.path.exists("output.raw"):
         os.remove("output.raw")
 
-    await userge.send_message(
+    await alpha.send_message(
         int("-100" + str(c.full_chat.id)) if connected else CHAT_ID,
         f"`{'Joined' if connected else 'Left'} Voice-Chat Successfully`",
         del_in=5 if not connected else -1
