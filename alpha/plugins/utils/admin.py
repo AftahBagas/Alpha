@@ -35,20 +35,20 @@ async def mentionadmins(message: Message):
             full_name = (await message.client.get_user_dict(u_id))["flname"]
             if status == "creator":
                 if men_admins or men_creator:
-                    mentions += f"\n 🙉 [{full_name}](tg://user?id={u_id})"
+                    mentions += f"\n 🙉 Ketua Monyet[{full_name}](tg://user?id={u_id})"
                 elif username:
-                    mentions += f"\n 🙉 [{full_name}](https://t.me/{username})"
+                    mentions += f"\n 🙉 Ketua Monyet[{full_name}](https://t.me/{username})"
                 else:
-                    mentions += f"\n 🙉 {full_name}"
+                    mentions += f"\n 🙉 Ketua Monyet{full_name}"
                 if show_id:
                     mentions += f" `{u_id}`"
             elif status == "administrator":
                 if men_admins:
-                    mentions += f"\n monyet ➥ [{full_name}](tg://user?id={u_id})"
+                    mentions += f"\n🙉 monyet ➥ [{full_name}](tg://user?id={u_id})"
                 elif username:
-                    mentions += f"\n monyet ➥ [{full_name}](https://t.me/{username})"
+                    mentions += f"\n🙉 monyet ➥ [{full_name}](https://t.me/{username})"
                 else:
-                    mentions += f"\n monyet ➥ {full_name}"
+                    mentions += f"\n🙉 monyet ➥ {full_name}"
                 if show_id:
                     mentions += f" `{u_id}`"
     except Exception as e:
