@@ -37,7 +37,9 @@ async def mentionadmins(message: Message):
                 if men_admins or men_creator:
                     mentions += f"\n 🙉 Ketua Monyet[{full_name}](tg://user?id={u_id})"
                 elif username:
-                    mentions += f"\n 🙉 Ketua Monyet[{full_name}](https://t.me/{username})"
+                    mentions += (
+                        f"\n 🙉 Ketua Monyet[{full_name}](https://t.me/{username})"
+                    )
                 else:
                     mentions += f"\n 🙉 Ketua Monyet{full_name}"
                 if show_id:
