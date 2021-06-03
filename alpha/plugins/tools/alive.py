@@ -1,3 +1,5 @@
+"""Alive Info"""
+
 import asyncio
 import os
 import re
