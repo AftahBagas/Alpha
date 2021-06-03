@@ -1,75 +1,75 @@
+
+"""Fun plugin"""
+
 import asyncio
-import os
-import re
-from typing import Optional, Tuple
+from datetime import datetime
+from re import compile as comp_regex
 
-import wget
-from alphaz import Config, Message, alphaz, logging, versions
-from alphaz.core.ext import pool
-from alphaz.utils import get_file_id_of_media
-from pyrogram.errors import (
-    BadRequest,
-    ChannelInvalid,
-    ChatSendMediaForbidden,
-    FileIdInvalid,
-    FileReferenceEmpty,
-    Forbidden,
-    MediaEmpty,
-    PeerIdInvalid,
-    SlowmodeWait,
+from pyrogram import filters
+from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
+from pyrogram.file_id import PHOTO_TYPES, FileId
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+
+from alpha import Config, Message, get_version, userge, versions
+from alpha.core.ext import RawClient
+from alpha.utils import get_file_id, rand_array
+
+_ALIVE_REGEX = comp_regex(
+    r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
 )
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+_USER_CACHED_MEDIA, _BOT_CACHED_MEDIA = None, None
 
-_LOG = logging.getLogger(__name__)
-
-_IS_TELEGRAPH = False
-_IS_STICKER = False
-
-_DEFAULT = "https://t.me/AlphaZPlugins/4"
-_CHAT, _MSG_ID = None, None
-_LOGO_ID = None
+LOGGER = alpha.getLogger(__name__)
 
 
-@alphaz.on_cmd(
-    "logo", about={"header": "This command is just for fun"}, allow_channels=False
-)
-async def alive(message: Message):
-    if not (_CHAT and _MSG_ID):
-        try:
-            _set_data()
-        except Exception as set_err:
-            _LOG.exception(
-                "There was some problem while setting Media Data. "
-                f"trying again... ERROR:: {set_err} ::"
-            )
-            _set_data(True)
+async def _init() -> None:
+    global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
+    if Config.ALIVE_MEDIA and Config.ALIVE_MEDIA.lower() != "false":
+        am_type, am_link = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA.strip())
+        if am_type and am_type == "tg_media":
+            try:
+                if Config.HU_STRING_SESSION:
+                    _USER_CACHED_MEDIA = get_file_id(
+                        await alpha.get_messages(am_link[0], am_link[1])
+                    )
+            except Exception as u_rr:
+                LOGGER.debug(u_rr)
+            try:
+                if userge.has_bot:
+                    _BOT_CACHED_MEDIA = get_file_id(
+                        await alpha.bot.get_messages(am_link[0], am_link[1])
+                    )
+            except Exception as b_rr:
+                LOGGER.debug(b_rr)
 
-    alive_text, markup = _get_alive_text_and_markup(message)
-    if _MSG_ID == "text_format":
-        return await message.edit(
-            alive_text, disable_web_page_preview=True, reply_markup=markup
-        )
-    await message.delete()
+
+@alpha.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
+async def alive_inline(message: Message):
     try:
-        await _send_alive(message, alive_text, markup)
-    except (FileIdInvalid, FileReferenceEmpty, BadRequest):
-        await _refresh_id(message)
-        await _send_alive(message, alive_text, markup)
+        if message.client.is_bot:
+            await send_alive_message(message)
+        elif userge.has_bot:
+            try:
+                await send_inline_alive(message)
+            except BadRequest:
+                await send_alive_message(message)
+        else:
+            await send_alive_message(message)
+    except Exception as e_all:
+        await message.err(str(e_all), del_in=10, log=__name__)
 
 
 def _get_mode() -> str:
-    if alphaz.dual_mode:
+    if alpha.dual_mode:
         return "Dual"
     if Config.BOT_TOKEN:
         return "Bot"
     return "User"
 
 
-def _get_alive_text_and_markup(
-    message: Message,
-) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
+def _get_alive_text_and_markup(message: Message) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
     markup = None
-    output = f"""**Alpha Z Plugins Is Running 🔥!..**\n
+    output = f"""**Alpha Userbot Is Running 🔥!..**\n
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
 **❍ ⏱️ • uptime** : `{alphaz.uptime}`
 **❍ 🧪 • version** : `0.3.2`
@@ -90,17 +90,13 @@ def _get_alive_text_and_markup(
 """
     else:
         copy_ = "https://github.com/AftahBagas/AlphaZ-Plugins/blob/alpha/LICENSE"
-        markup = InlineKeyboardMarkup(
+        markup = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        text="😈 Github", url="https://github.com/AftahBagas"
-                    ),
-                    InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO),
-                ],
-                [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)],
-            ]
-        )
+                InlineKeyboardButton(text="😈 Github", url="https://github.com/AftahBagas"),
+                InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO)
+            ],
+            [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)]
+        ])
     return output, markup
 
 
@@ -108,12 +104,10 @@ def _parse_arg(arg: bool) -> str:
     return "enabled" if arg else "disabled"
 
 
-async def _send_alive(
-    message: Message,
-    text: str,
-    reply_markup: Optional[InlineKeyboardMarkup],
-    recurs_count: int = 0,
-) -> None:
+async def _send_alive(message: Message,
+                      text: str,
+                      reply_markup: Optional[InlineKeyboardMarkup],
+                      recurs_count: int = 0) -> None:
     if not _LOGO_ID:
         await _refresh_id(message)
     should_mark = None if _IS_STICKER else reply_markup
@@ -121,12 +115,10 @@ async def _send_alive(
         await _send_telegraph(message, text, reply_markup)
     else:
         try:
-            await message.client.send_cached_media(
-                chat_id=message.chat.id,
-                file_id=_LOGO_ID,
-                caption=text,
-                reply_markup=should_mark,
-            )
+            await message.client.send_cached_media(chat_id=message.chat.id,
+                                                   file_id=_LOGO_ID,
+                                                   caption=text,
+                                                   reply_markup=should_mark)
             if _IS_STICKER:
                 raise ChatSendMediaForbidden
         except SlowmodeWait as s_m:
@@ -139,12 +131,10 @@ async def _send_alive(
             await _refresh_id(message)
             return await _send_alive(message, text, reply_markup, recurs_count + 1)
         except (ChatSendMediaForbidden, Forbidden):
-            await message.client.send_message(
-                chat_id=message.chat.id,
-                text=text,
-                disable_web_page_preview=True,
-                reply_markup=should_mark,
-            )
+            await message.client.send_message(chat_id=message.chat.id,
+                                              text=text,
+                                              disable_web_page_preview=True,
+                                              reply_markup=should_mark)
 
 
 async def _refresh_id(message: Message) -> None:
@@ -191,21 +181,28 @@ def _set_data(errored: bool = False) -> None:
         _MSG_ID = int(match.group(7))
 
 
-async def _send_telegraph(
-    msg: Message, text: str, reply_markup: Optional[InlineKeyboardMarkup]
-):
+async def _send_telegraph(msg: Message, text: str, reply_markup: Optional[InlineKeyboardMarkup]):
     path = os.path.join(Config.DOWN_PATH, os.path.split(Config.ALIVE_MEDIA)[1])
     if not os.path.exists(path):
         await pool.run_in_thread(wget.download)(Config.ALIVE_MEDIA, path)
     if path.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")):
         await msg.client.send_photo(
-            chat_id=msg.chat.id, photo=path, caption=text, reply_markup=reply_markup
+            chat_id=msg.chat.id,
+            photo=path,
+            caption=text,
+            reply_markup=reply_markup
         )
     elif path.lower().endswith((".mkv", ".mp4", ".webm")):
         await msg.client.send_video(
-            chat_id=msg.chat.id, video=path, caption=text, reply_markup=reply_markup
+            chat_id=msg.chat.id,
+            video=path,
+            caption=text,
+            reply_markup=reply_markup
         )
     else:
         await msg.client.send_document(
-            chat_id=msg.chat.id, document=path, caption=text, reply_markup=reply_markup
+            chat_id=msg.chat.id,
+            document=path,
+            caption=text,
+            reply_markup=reply_markup
         )
