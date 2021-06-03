@@ -1,4 +1,3 @@
-
 """Fun plugin"""
 
 import asyncio
