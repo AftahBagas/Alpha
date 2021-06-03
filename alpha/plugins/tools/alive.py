@@ -33,7 +33,7 @@ _LOGO_ID = None
 
 @alpha.on_cmd("alive", about={"header": "get alive logo"})
 async def see_alive(message: Message):
-    """see repo"""
+    """see alive"""
 
 
 async def alive(message: Message):
