@@ -1,17 +1,13 @@
 """Fun plugin"""
 
 import asyncio
-from datetime import datetime
 from re import compile as comp_regex
 
-from pyrogram import filters
-from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
-from pyrogram.file_id import PHOTO_TYPES, FileId
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.errors import BadRequest, Forbidden, MediaEmpty
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from alpha import Config, Message, get_version, userge, versions
-from alpha.core.ext import RawClient
-from alpha.utils import get_file_id, rand_array
+from alpha import Config, Message, userge, versions
+from alpha.utils import get_file_id
 
 _ALIVE_REGEX = comp_regex(
     r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
@@ -66,7 +62,9 @@ def _get_mode() -> str:
     return "User"
 
 
-def _get_alive_text_and_markup(message: Message) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
+def _get_alive_text_and_markup(
+    message: Message,
+) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
     markup = None
     output = f"""**Alpha Userbot Is Running 🔥!..**\n
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
@@ -89,13 +87,17 @@ def _get_alive_text_and_markup(message: Message) -> Tuple[str, Optional[InlineKe
 """
     else:
         copy_ = "https://github.com/AftahBagas/AlphaZ-Plugins/blob/alpha/LICENSE"
-        markup = InlineKeyboardMarkup([
+        markup = InlineKeyboardMarkup(
             [
-                InlineKeyboardButton(text="😈 Github", url="https://github.com/AftahBagas"),
-                InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO)
-            ],
-            [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)]
-        ])
+                [
+                    InlineKeyboardButton(
+                        text="😈 Github", url="https://github.com/AftahBagas"
+                    ),
+                    InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO),
+                ],
+                [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)],
+            ]
+        )
     return output, markup
 
 
@@ -103,10 +105,12 @@ def _parse_arg(arg: bool) -> str:
     return "enabled" if arg else "disabled"
 
 
-async def _send_alive(message: Message,
-                      text: str,
-                      reply_markup: Optional[InlineKeyboardMarkup],
-                      recurs_count: int = 0) -> None:
+async def _send_alive(
+    message: Message,
+    text: str,
+    reply_markup: Optional[InlineKeyboardMarkup],
+    recurs_count: int = 0,
+) -> None:
     if not _LOGO_ID:
         await _refresh_id(message)
     should_mark = None if _IS_STICKER else reply_markup
@@ -114,10 +118,12 @@ async def _send_alive(message: Message,
         await _send_telegraph(message, text, reply_markup)
     else:
         try:
-            await message.client.send_cached_media(chat_id=message.chat.id,
-                                                   file_id=_LOGO_ID,
-                                                   caption=text,
-                                                   reply_markup=should_mark)
+            await message.client.send_cached_media(
+                chat_id=message.chat.id,
+                file_id=_LOGO_ID,
+                caption=text,
+                reply_markup=should_mark,
+            )
             if _IS_STICKER:
                 raise ChatSendMediaForbidden
         except SlowmodeWait as s_m:
@@ -130,10 +136,12 @@ async def _send_alive(message: Message,
             await _refresh_id(message)
             return await _send_alive(message, text, reply_markup, recurs_count + 1)
         except (ChatSendMediaForbidden, Forbidden):
-            await message.client.send_message(chat_id=message.chat.id,
-                                              text=text,
-                                              disable_web_page_preview=True,
-                                              reply_markup=should_mark)
+            await message.client.send_message(
+                chat_id=message.chat.id,
+                text=text,
+                disable_web_page_preview=True,
+                reply_markup=should_mark,
+            )
 
 
 async def _refresh_id(message: Message) -> None:
@@ -180,28 +188,21 @@ def _set_data(errored: bool = False) -> None:
         _MSG_ID = int(match.group(7))
 
 
-async def _send_telegraph(msg: Message, text: str, reply_markup: Optional[InlineKeyboardMarkup]):
+async def _send_telegraph(
+    msg: Message, text: str, reply_markup: Optional[InlineKeyboardMarkup]
+):
     path = os.path.join(Config.DOWN_PATH, os.path.split(Config.ALIVE_MEDIA)[1])
     if not os.path.exists(path):
         await pool.run_in_thread(wget.download)(Config.ALIVE_MEDIA, path)
     if path.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")):
         await msg.client.send_photo(
-            chat_id=msg.chat.id,
-            photo=path,
-            caption=text,
-            reply_markup=reply_markup
+            chat_id=msg.chat.id, photo=path, caption=text, reply_markup=reply_markup
         )
     elif path.lower().endswith((".mkv", ".mp4", ".webm")):
         await msg.client.send_video(
-            chat_id=msg.chat.id,
-            video=path,
-            caption=text,
-            reply_markup=reply_markup
+            chat_id=msg.chat.id, video=path, caption=text, reply_markup=reply_markup
         )
     else:
         await msg.client.send_document(
-            chat_id=msg.chat.id,
-            document=path,
-            caption=text,
-            reply_markup=reply_markup
+            chat_id=msg.chat.id, document=path, caption=text, reply_markup=reply_markup
         )
