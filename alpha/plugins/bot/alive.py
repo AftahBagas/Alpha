@@ -1,171 +1,63 @@
 """Fun plugin"""
 
+import re
+import os
 import asyncio
-from re import compile as comp_regex
+from typing import Tuple, Optional
 
-from pyrogram.errors import BadRequest, Forbidden, MediaEmpty
-from pyrogram.file_id import PHOTO_TYPES, FileId
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
-from alpha import Config, Message, alpha, get_version, versions
-from alpha.utils import get_file_id, rand_array
-
-_ALIVE_REGEX = comp_regex(
-    r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
+import wget
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.errors import (
+    ChatSendMediaForbidden, Forbidden, SlowmodeWait, PeerIdInvalid,
+    FileIdInvalid, FileReferenceEmpty, BadRequest, ChannelInvalid, MediaEmpty
 )
-_USER_CACHED_MEDIA, _BOT_CACHED_MEDIA = None, None
 
-LOGGER = alpha.getLogger(__name__)
+from alphaz.core.ext import pool
+from alphaz.utils import get_file_id_of_media
+from alphaz import alphaz, Message, Config, versions, get_version, logging
 
+_LOG = logging.getLogger(__name__)
 
-async def _init() -> None:
-    global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
-    if Config.ALIVE_MEDIA and Config.ALIVE_MEDIA.lower() != "false":
-        am_type, am_link = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA.strip())
-        if am_type and am_type == "tg_media":
-            try:
-                if Config.HU_STRING_SESSION:
-                    _USER_CACHED_MEDIA = get_file_id(
-                        await alpha.get_messages(am_link[0], am_link[1])
-                    )
-            except Exception as u_rr:
-                LOGGER.debug(u_rr)
-            try:
-                if alpha.has_bot:
-                    _BOT_CACHED_MEDIA = get_file_id(
-                        await alpha.bot.get_messages(am_link[0], am_link[1])
-                    )
-            except Exception as b_rr:
-                LOGGER.debug(b_rr)
+_IS_TELEGRAPH = False
+_IS_STICKER = False
+
+_DEFAULT = "https://t.me/AlphaZPlugins/4"
+_CHAT, _MSG_ID = None, None
+_LOGO_ID = None
 
 
-@alpha.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
-async def alive_inline(message: Message):
-    try:
-        if message.client.is_bot:
-            await send_alive_message(message)
-        elif alpha.has_bot:
-            try:
-                await send_inline_alive(message)
-            except BadRequest:
-                await send_alive_message(message)
-        else:
-            await send_alive_message(message)
-    except Exception as e_all:
-        await message.err(str(e_all), del_in=10, log=__name__)
+@alphaz.on_cmd("logo", about={
+    'header': "This command is just for fun"}, allow_channels=False)
+async def alive(message: Message):
+    if not (_CHAT and _MSG_ID):
+        try:
+            _set_data()
+        except Exception as set_err:
+            _LOG.exception("There was some problem while setting Media Data. "
+                           f"trying again... ERROR:: {set_err} ::")
+            _set_data(True)
 
-
-async def send_inline_alive(message: Message) -> None:
-    _bot = await alpha.bot.get_me()
-    try:
-        i_res = await alpha.get_inline_bot_results(_bot.username, "alive")
-        i_res_id = (
-            (
-                await petercord.send_inline_bot_result(
-                    chat_id=message.chat.id,
-                    query_id=i_res.query_id,
-                    result_id=i_res.results[0].id,
-                )
-            )
-            .updates[0]
-            .id
-        )
-    except (Forbidden, BadRequest) as ex:
-        await message.err(str(ex), del_in=5)
-        return
+    alive_text, markup = _get_alive_text_and_markup(message)
+    if _MSG_ID == "text_format":
+        return await message.edit(alive_text, disable_web_page_preview=True, reply_markup=markup)
     await message.delete()
-    await asyncio.sleep(200)
-    await alpha.delete_messages(message.chat.id, i_res_id)
+    try:
+        await _send_alive(message, alive_text, markup)
+    except (FileIdInvalid, FileReferenceEmpty, BadRequest):
+        await _refresh_id(message)
+        await _send_alive(message, alive_text, markup)
 
 
-async def send_alive_message(message: Message) -> None:
-    global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
-    chat_id = message.chat.id
-    client = message.client
-    caption = Bot_Alive.alive_info()
-    if not Config.ALIVE_MEDIA:
-        await client.send_photo(
-            chat_id,
-            photo=Bot_Alive.alive_default_imgs(),
-            caption=caption,
-            reply_markup=reply_markup,
-        )
-        return
-    url_ = Config.ALIVE_MEDIA.strip()
-    if url_.lower() == "false":
-        await client.send_message(
-            chat_id,
-            caption=caption,
-            reply_markup=reply_markup,
-            disable_web_page_preview=True,
-        )
-    else:
-        type_, media_ = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA)
-        if type_ == "url_gif":
-            await client.send_animation(
-                chat_id,
-                animation=url_,
-                caption=caption,
-                reply_markup=reply_markup,
-            )
-        elif type_ == "url_image":
-            await client.send_photo(
-                chat_id,
-                photo=url_,
-                caption=caption,
-                reply_markup=reply_markup,
-            )
-        elif type_ == "tg_media":
-            try:
-                await client.send_cached_media(
-                    chat_id,
-                    file_id=file_id,
-                    caption=caption,
-                    reply_markup=reply_markup,
-                )
-            except MediaEmpty:
-                if not message.client.is_bot:
-                    try:
-                        refeshed_f_id = get_file_id(
-                            await alpha.get_messages(media_[0], media_[1])
-                        )
-                        await alpha.send_cached_media(
-                            chat_id,
-                            file_id=refeshed_f_id,
-                            caption=caption,
-                        )
-                    except Exception as u_err:
-                        LOGGER.error(u_err)
-                    else:
-                        _USER_CACHED_MEDIA = refeshed_f_id
+def _get_mode() -> str:
+    if alphaz.dual_mode:
+        return "Dual"
+    if Config.BOT_TOKEN:
+        return "Bot"
+    return "User"
 
-
-class Bot_Alive:
-    @staticmethod
-    async def check_media_link(media_link: str):
-        match = _ALIVE_REGEX.search(media_link.strip())
-        if not match:
-            return None, None
-        if match.group(1) == "i.imgur.com":
-            link = match.group(0)
-            link_type = "url_gif" if match.group(3) == "gif" else "url_image"
-        elif match.group(1) == "telegra.ph/file":
-            link = match.group(0)
-            link_type = "url_image"
-        else:
-            link_type = "tg_media"
-            if match.group(2) == "c":
-                chat_id = int("-100" + str(match.group(3)))
-                message_id = match.group(4)
-            else:
-                chat_id = match.group(2)
-                message_id = match.group(3)
-            link = [chat_id, int(message_id)]
-        return link_type, link
-
-    @staticmethod
-    def alive_info() -> str:
-        alive_info_ = f"""**Alpha Z Plugins Is Running 🔥!..**\n
+    def _get_alive_text_and_markup(message: Message) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
+    markup = None
+    output = f"""**Alpha Z Plugins Is Running 🔥!..**\n
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
 **❍ ⏱️ • uptime** : `{alphaz.uptime}`
 **❍ 🧪 • version** : `{get_version()}`
