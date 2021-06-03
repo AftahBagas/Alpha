@@ -20,7 +20,9 @@ async def mentionadmins(message: Message):
     if not chat_id:
         chat_id = message.chat.id
     try:
-        async for x in message.client.iter_chat_members(chat_id=chat_id, filter=administrators"):
+        async for x in message.client.iter_chat_members(
+            chat_id=chat_id, filter="monyetgc"
+        ):
             status = x.status
             u_id = x.user.id
             username = x.user.username or None
