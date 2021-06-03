@@ -6,7 +6,6 @@ import shlex
 from os.path import basename, exists, join
 from typing import Iterator, List, Optional, Tuple, Union
 
-from emoji import get_emoji_regexp
 from html_telegraph_poster import TelegraphPoster
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
