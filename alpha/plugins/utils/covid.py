@@ -2,23 +2,27 @@
 
 from covid import Covid
 
-from alpha import alpha, Message, pool
+from alpha import Message, alpha, pool
 
 
-@alpha.on_cmd("covid", about={
-    'header': "lihat detail yang jelas",
-    'description': "Situasi real time pasien COVID-19 saat ini dilaporkan di seluruh dunia",
-    'flags': {'-l': "daftar negara"},
-    'usage': "{tr}covid [flag | country]",
-    'examples': ["{tr}covid -l", "{tr}covid", "{tr}covid india"]})
+@alpha.on_cmd(
+    "covid",
+    about={
+        "header": "lihat detail yang jelas",
+        "description": "Situasi real time pasien COVID-19 saat ini dilaporkan di seluruh dunia",
+        "flags": {"-l": "daftar negara"},
+        "usage": "{tr}covid [flag | country]",
+        "examples": ["{tr}covid -l", "{tr}covid", "{tr}covid india"],
+    },
+)
 async def covid(message: Message):
     await message.edit("`mengambil data covid ...`")
     covid_ = await pool.run_in_thread(Covid)("worldometers")
     country = message.input_str
     result = ""
-    if '-l' in message.flags:
+    if "-l" in message.flags:
         result += "<u>Negara-negara yang Didukung Cmd Covid</u>\n\n`"
-        result += '` , `'.join(sorted(filter(lambda x: x, covid_.list_countries())))
+        result += "` , `".join(sorted(filter(lambda x: x, covid_.list_countries())))
         result += "`"
     elif country:
         try:
@@ -37,7 +41,9 @@ async def covid(message: Message):
         result += f"**tes total** : `{data['total_tests']}`\n"
         result += f"**total tes per juta** : `{data['total_tests_per_million']}`\n"
         result += f"**total kasus per juta** : `{data['total_cases_per_million']}`\n"
-        result += f"**total kematian per juta** : `{data['total_deaths_per_million']}`\n"
+        result += (
+            f"**total kematian per juta** : `{data['total_deaths_per_million']}`\n"
+        )
         result += f"**populasi** : `{data['population']}`\n"
     else:
         result += "<u>Status Covid di dunia</u>\n\n"
