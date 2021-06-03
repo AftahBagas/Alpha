@@ -23,7 +23,7 @@ from alpha.plugins.misc.download import tg_download, url_download
 LOGGER = alpha.getLogger(__name__)
 CHANNEL = alpha.getCLogger(__name__)
 
-LOGO_PATH = 'resources/alpha.png'
+LOGO_PATH = 'alpha.png'
 
 
 @alpha.on_cmd("rename", about={
