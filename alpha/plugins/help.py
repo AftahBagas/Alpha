@@ -51,7 +51,7 @@ async def helpme(
     plugins = alpha.manager.enabled_plugins
     if not message.input_str:
         out_str = (
-            f"""⚒ <b><u>(<code>{len(plugins)}</code>) Plugin(s) Available</u></b>\n\n"""
+            f"""⚙️ <b><u>(<code>{len(plugins)}</code>) Plugin(s) Available</u></b>\n\n"""
         )
         cat_plugins = alpha.manager.get_plugins()
         for cat in sorted(cat_plugins):
