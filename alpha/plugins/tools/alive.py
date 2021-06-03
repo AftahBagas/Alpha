@@ -4,9 +4,9 @@ import re
 from typing import Optional, Tuple
 
 import wget
-from alphaz import Config, Message, alphaz, logging, versions
-from alphaz.core.ext import pool
-from alphaz.utils import get_file_id_of_media
+from alpha import Config, Message, alpha, logging, versions
+from alpha.core.ext import pool
+from alpha.utils import get_file_id_of_media
 from pyrogram.errors import (
     BadRequest,
     ChannelInvalid,
@@ -30,9 +30,10 @@ _CHAT, _MSG_ID = None, None
 _LOGO_ID = None
 
 
-@alpha.on_cmd(
-    "alive", about={"header": "This command is just for fun"}, allow_channels=False
-)
+@alpha.on_cmd("alive", about={"header": "get alive logo"})
+async def see_alive(message: Message):
+    """see repo"""
+
 async def alive(message: Message):
     if not (_CHAT and _MSG_ID):
         try:
