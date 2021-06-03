@@ -23,6 +23,7 @@ from alpha import Config, Message, alpha, get_collection
 _CATEGORY = {
     "admin": "👮",
     "fun": "🥳",
+    "Music" 🎧
     "misc": "⚙️",
     "tools": "🧰",
     "utils": "🗂",
