@@ -6,11 +6,18 @@ import re
 from typing import Optional, Tuple
 
 import wget
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import (
-    ChatSendMediaForbidden, Forbidden, SlowmodeWait, PeerIdInvalid,
-    FileIdInvalid, FileReferenceEmpty, BadRequest, ChannelInvalid, MediaEmpty
+    BadRequest,
+    ChannelInvalid,
+    ChatSendMediaForbidden,
+    FileIdInvalid,
+    FileReferenceEmpty,
+    Forbidden,
+    MediaEmpty,
+    PeerIdInvalid,
+    SlowmodeWait,
 )
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from alpha import Config, Message, alpha, logging, versions
 from alpha.core.ext import pool
