@@ -7,7 +7,7 @@ import pybase64
 from alpha import Message
 from alpha.utils import runcmd
 
-alpha.on_cmd(
+@alpha.on_cmd(
     "hash",
     about={
         "header": "find hash of text",
@@ -37,7 +37,7 @@ async def gethash(message: Message):
     await message.edit_or_send_as_file(ans, filename="hash.txt", caption="hash.txt")
 
 
-alpha.on_cmd(
+@alpha.on_cmd(
     "base64",
     about={
         "header": "Find the base64 encoding of the given string",
