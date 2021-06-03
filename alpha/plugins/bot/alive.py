@@ -12,9 +12,9 @@ from pyrogram.errors import (
     FileIdInvalid, FileReferenceEmpty, BadRequest, ChannelInvalid, MediaEmpty
 )
 
-from alphaz.core.ext import pool
-from alphaz.utils import get_file_id_of_media
-from alphaz import alphaz, Message, Config, versions, get_version, logging
+from alpha.core.ext import pool
+from alpha.utils import get_file_id_of_media
+from alpha import alpha, Message, Config, versions, get_version, logging
 
 _LOG = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ _CHAT, _MSG_ID = None, None
 _LOGO_ID = None
 
 
-@alphaz.on_cmd("logo", about={
+@alpha.on_cmd("alive", about={
     'header': "This command is just for fun"}, allow_channels=False)
 async def alive(message: Message):
     if not (_CHAT and _MSG_ID):
@@ -49,7 +49,7 @@ async def alive(message: Message):
 
 
 def _get_mode() -> str:
-    if alphaz.dual_mode:
+    if alpha.dual_mode:
         return "Dual"
     if Config.BOT_TOKEN:
         return "Bot"
@@ -57,11 +57,11 @@ def _get_mode() -> str:
 
     def _get_alive_text_and_markup(message: Message) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
     markup = None
-    output = f"""**Alpha Z Plugins Is Running 🔥!..**\n
+    output = f"""**Alpha Userbot Is Running 🔥!..**\n
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
-**❍ ⏱️ • uptime** : `{alphaz.uptime}`
-**❍ 🧪 • version** : `{get_version()}`
-**❍ 😈 • mode** : `{_get_mode()}`
+**❍ ⏱️ • uptime** : `{alpha.uptime}`
+**❍ 🧪 • version** : `0.3.2`
+**❍ 😈 • mode** : `Dual`
 **❍ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
 **❍ ⚙️ • Pm-Guard**: `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
 **❍ 🖐️ • Anti-Spam**: `{_parse_arg(Config.ANTISPAM_SENTRY)}`"""
