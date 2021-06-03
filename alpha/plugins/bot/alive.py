@@ -9,7 +9,7 @@ from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
 from pyrogram.file_id import PHOTO_TYPES, FileId
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from alpha import Config, Message, get_version, alpha, versions
+from alpha import Config, Message, alpha, get_version, versions
 from alpha.core.ext import RawClient
 from alpha.utils import get_file_id, rand_array
 
@@ -267,4 +267,3 @@ class Bot_Alive:
     @staticmethod
     def is_photo(file_id: str) -> bool:
         return bool(FileId.decode(file_id).file_type in PHOTO_TYPES)
-
