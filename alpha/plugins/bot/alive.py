@@ -1,16 +1,13 @@
 """Fun plugin"""
 
 import asyncio
-from datetime import datetime
 from re import compile as comp_regex
 
-from pyrogram import filters
-from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
+from pyrogram.errors import BadRequest, Forbidden, MediaEmpty
 from pyrogram.file_id import PHOTO_TYPES, FileId
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from alpha import Config, Message, alpha, get_version, versions
-from alpha.core.ext import RawClient
 from alpha.utils import get_file_id, rand_array
 
 _ALIVE_REGEX = comp_regex(
@@ -143,8 +140,6 @@ async def send_alive_message(message: Message) -> None:
                         _USER_CACHED_MEDIA = refeshed_f_id
 
 
-
-
 class Bot_Alive:
     @staticmethod
     async def check_media_link(media_link: str):
@@ -170,7 +165,7 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info() -> str:
-        alive_info_ =  f"""**Alpha Z Plugins Is Running 🔥!..**\n
+        alive_info_ = f"""**Alpha Z Plugins Is Running 🔥!..**\n
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
 **❍ ⏱️ • uptime** : `{alphaz.uptime}`
 **❍ 🧪 • version** : `{get_version()}`
@@ -178,6 +173,7 @@ class Bot_Alive:
 **❍ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
 **❍ ⚙️ • Pm-Guard**: `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
 **❍ 🖐️ • Anti-Spam**: `{_parse_arg(Config.ANTISPAM_SENTRY)}`"""
+
     if Config.HEROKU_APP:
         output += f"\n❍ **🌐 • Dyno-saver**: `{_parse_arg(Config.RUN_DYNO_SAVER)}`"
     output += f"""
@@ -191,13 +187,17 @@ class Bot_Alive:
 """
     else:
         copy_ = "https://github.com/AftahBagas/AlphaZ-Plugins/blob/alpha/LICENSE"
-        markup = InlineKeyboardMarkup([
+        markup = InlineKeyboardMarkup(
             [
-                InlineKeyboardButton(text="😈 Github", url="https://github.com/AftahBagas"),
-                InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO)
-            ],
-            [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)]
-        ])
+                [
+                    InlineKeyboardButton(
+                        text="😈 Github", url="https://github.com/AftahBagas"
+                    ),
+                    InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO),
+                ],
+                [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)],
+            ]
+        )
     return output, markup
 
     @staticmethod
