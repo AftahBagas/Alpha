@@ -4,9 +4,6 @@ import re
 from typing import Optional, Tuple
 
 import wget
-from alpha import Config, Message, alpha, logging, versions
-from alpha.core.ext import pool
-from alpha.utils import get_file_id_of_media
 from pyrogram.errors import (
     BadRequest,
     ChannelInvalid,
@@ -19,6 +16,10 @@ from pyrogram.errors import (
     SlowmodeWait,
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+from alpha import Config, Message, alpha, logging, versions
+from alpha.core.ext import pool
+from alpha.utils import get_file_id_of_media
 
 _LOG = logging.getLogger(__name__)
 
@@ -33,6 +34,7 @@ _LOGO_ID = None
 @alpha.on_cmd("alive", about={"header": "get alive logo"})
 async def see_alive(message: Message):
     """see repo"""
+
 
 async def alive(message: Message):
     if not (_CHAT and _MSG_ID):
