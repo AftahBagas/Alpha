@@ -231,7 +231,7 @@ class Bot_Alive:
   🎖   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🎖   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🎖   <b>𝑿 :</b>    <code>v{get_version()}</code>
-<b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{petercord.uptime}</b>
+<b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{alpha.uptime}</b>
 """
         return alive_info_
 
@@ -267,4 +267,4 @@ class Bot_Alive:
     @staticmethod
     def is_photo(file_id: str) -> bool:
         return bool(FileId.decode(file_id).file_type in PHOTO_TYPES)
-© 2021 GitHub, Inc.
+
