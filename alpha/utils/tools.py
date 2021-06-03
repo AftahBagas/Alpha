@@ -1,49 +1,102 @@
 # alfareza
 
-import asyncio
-import os
 import re
 import shlex
-from os.path import basename
-from typing import List, Optional, Tuple
+import asyncio
+from os.path import basename, join, exists
+from emoji import get_emoji_regexp
+from typing import Tuple, List, Optional, Iterator, Union
 
 from html_telegraph_poster import TelegraphPoster
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from ujson import loads
 
 import alpha
 
 _LOG = alpha.logging.getLogger(__name__)
+_BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:/{0,2}(.+?)(:same)?])")
+_PTN_SPLIT = re.compile(r'(\.\d+|\.|\d+)')
 
-_BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:(?:/{0,2})(.+?)(:same)?])")
+
+def sort_file_name_key(file_name: str) -> tuple:
+    """ sort key for file names """
+    if not isinstance(file_name, str):
+        file_name = str(file_name)
+    return tuple(_sort_algo(_PTN_SPLIT.split(file_name.lower())))
 
 
-def get_file_id(
-    message: "alpha.Message",
-) -> Optional[str]:
-    """get file_id"""
-    if message is None:
-        return
-    file_ = (
-        message.audio
-        or message.animation
-        or message.photo
-        or message.sticker
-        or message.voice
-        or message.video_note
-        or message.video
-        or message.document
-    )
-    return file_.file_id if file_ else None
+# this algo doesn't support signed values
+def _sort_algo(data: List[str]) -> Iterator[Union[str, float]]:
+    """ sort algo for file names """
+    p1 = 0.0
+    for p2 in data:
+        # skipping null values
+        if not p2:
+            continue
+
+        # first letter of the part
+        c = p2[0]
+
+        # checking c is a digit or not
+        # if yes, p2 should not contain any non digits
+        if c.isdigit():
+            # p2 should be [0-9]+
+            # so c should be 0-9
+            if c == '0':
+                # add padding
+                # this fixes `a1` and `a01` messing
+                if isinstance(p1, str):
+                    yield 0.0
+                yield c
+
+            # converting to float
+            p2 = float(p2)
+
+            # add padding
+            if isinstance(p1, float):
+                yield ''
+
+        # checking p2 is `.[0-9]+` or not
+        elif c == '.' and len(p2) > 1 and p2[1].isdigit():
+            # p2 should be `.[0-9]+`
+            # so converting to float
+            p2 = float(p2)
+
+            # add padding
+            if isinstance(p1, str):
+                yield 0.0
+            yield c
+
+        # add padding if previous and current both are strings
+        if isinstance(p1, str) and isinstance(p2, str):
+            yield 0.0
+
+        yield p2
+        # saving current value for later use
+        p1 = p2
+
+
+def demojify(string: str) -> str:
+    """ Remove emojis and other non-safe characters from string """
+    return get_emoji_regexp().sub(u'', string)
+
+
+def get_file_id_of_media(message: 'alpha.Message') -> Optional[str]:
+    """ get file_id """
+    file_ = message.audio or message.animation or message.photo \
+        or message.sticker or message.voice or message.video_note \
+        or message.video or message.document
+    if file_:
+        return file_.file_id
+    return None
 
 
 def humanbytes(size: float) -> str:
-    """humanize size"""
+    """ humanize size """
     if not size:
         return ""
     power = 1024
     t_n = 0
-    power_dict = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
+    power_dict = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
     while size > power:
         size /= power
         t_n += 1
@@ -51,74 +104,62 @@ def humanbytes(size: float) -> str:
 
 
 def time_formatter(seconds: float) -> str:
-    """humanize time"""
+    """ humanize time """
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = (
-        ((str(days) + "d, ") if days else "")
-        + ((str(hours) + "h, ") if hours else "")
-        + ((str(minutes) + "m, ") if minutes else "")
-        + ((str(seconds) + "s, ") if seconds else "")
-    )
+    tmp = ((str(days) + "d, ") if days else "") + \
+        ((str(hours) + "h, ") if hours else "") + \
+        ((str(minutes) + "m, ") if minutes else "") + \
+        ((str(seconds) + "s, ") if seconds else "")
     return tmp[:-2]
 
 
-# alfareza
+# https://github.com/AftahBagas/AlphaPlugins/blob/master/plugins/anilist.py
 def post_to_telegraph(a_title: str, content: str) -> str:
-    """Create a Telegram Post using HTML Content"""
+    """ Create a Telegram Post using HTML Content """
     post_client = TelegraphPoster(use_api=True)
-    auth_name = "Alpha Support"
+    auth_name = "@TheAlphaSupport"
     post_client.create_api_token(auth_name)
     post_page = post_client.post(
         title=a_title,
         author=auth_name,
-        author_url="https://t.me/TeamSquadUserbotSupport",
-        text=content,
+        author_url="https://t.me/@TheAlphaSupport",
+        text=content
     )
-    return post_page["url"]
+    return post_page['url']
 
 
 async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
-    """run command in terminal"""
+    """ run command in terminal """
     args = shlex.split(cmd)
-    process = await asyncio.create_subprocess_exec(
-        *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-    )
+    process = await asyncio.create_subprocess_exec(*args,
+                                                   stdout=asyncio.subprocess.PIPE,
+                                                   stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await process.communicate()
-    return (
-        stdout.decode("utf-8", "replace").strip(),
-        stderr.decode("utf-8", "replace").strip(),
-        process.returncode,
-        process.pid,
-    )
+    return (stdout.decode('utf-8', 'replace').strip(),
+            stderr.decode('utf-8', 'replace').strip(),
+            process.returncode,
+            process.pid)
 
 
-async def take_screen_shot(
-    video_file: str, duration: int, path: str = ""
-) -> Optional[str]:
-    """take a screenshot"""
-    _LOG.info(
-        "[[[Extracting a frame from %s ||| Video duration => %s]]]",
-        video_file,
-        duration,
-    )
+async def take_screen_shot(video_file: str, duration: int, path: str = '') -> Optional[str]:
+    """ take a screenshot """
+    _LOG.info('[[[Extracting a frame from %s ||| Video duration => %s]]]', video_file, duration)
     ttl = duration // 2
-    thumb_image_path = path or os.path.join(
-        alpha.Config.DOWN_PATH, f"{basename(video_file)}.jpg"
-    )
+    thumb_image_path = path or join(alpha.Config.DOWN_PATH, f"{basename(video_file)}.jpg")
     command = f'''ffmpeg -ss {ttl} -i "{video_file}" -vframes 1 "{thumb_image_path}"'''
     err = (await runcmd(command))[1]
     if err:
         _LOG.error(err)
-    return thumb_image_path if os.path.exists(thumb_image_path) else None
+    return thumb_image_path if exists(thumb_image_path) else None
 
 
 def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
-    """markdown_note to string and buttons"""
+    """ markdown_note to string and buttons """
     prev = 0
     note_data = ""
-    buttons: List[Tuple[str, str, str]] = []
+    buttons: List[Tuple[str, str, bool]] = []
     for match in _BTN_URL_REGEX.finditer(markdown_note):
         n_escapes = 0
         to_check = match.start(1) - 1
@@ -127,7 +168,7 @@ def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarku
             to_check -= 1
         if n_escapes % 2 == 0:
             buttons.append((match.group(2), match.group(3), bool(match.group(4))))
-            note_data += markdown_note[prev : match.start(1)]
+            note_data += markdown_note[prev:match.start(1)]
             prev = match.end(1)
         else:
             note_data += markdown_note[prev:to_check]
@@ -140,29 +181,3 @@ def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarku
         else:
             keyb.append([InlineKeyboardButton(btn[0], url=btn[1])])
     return note_data.strip(), InlineKeyboardMarkup(keyb) if keyb else None
-
-
-# https://www.tutorialspoint.com/How-do-you-split-a-list-into-evenly-sized-chunks-in-Python
-def sublists(input_list: list, width: int = 3):
-    return [input_list[x : x + width] for x in range(0, len(input_list), width)]
-
-
-# Solves ValueError: No closing quotation by removing ' or " in file name
-def safe_filename(path_):
-    if path_ is None:
-        return
-    safename = path_.replace("'", "").replace('"', "")
-    if safename != path_:
-        os.rename(path_, safename)
-    return safename
-
-
-def clean_obj(obj, convert: bool = False):
-    if convert:
-        # Pyrogram object to python Dict
-        obj = loads(str(obj))
-    if isinstance(obj, (list, tuple)):
-        return [clean_obj(item) for item in obj]
-    if isinstance(obj, dict):
-        return {key: clean_obj(value) for key, value in obj.items() if key != "_"}
-    return obj
