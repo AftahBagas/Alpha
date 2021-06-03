@@ -4,7 +4,7 @@ import re
 from typing import Optional, Tuple
 
 import wget
-from alphaz import Config, Message, alphaz, get_version, logging, versions
+from alphaz import Config, Message, alphaz, logging, versions
 from alphaz.core.ext import pool
 from alphaz.utils import get_file_id_of_media
 from pyrogram.errors import (
