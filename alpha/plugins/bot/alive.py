@@ -127,9 +127,9 @@ async def send_alive_message(message: Message) -> None:
                 if not message.client.is_bot:
                     try:
                         refeshed_f_id = get_file_id(
-                            await petercord.get_messages(media_[0], media_[1])
+                            await alpha.get_messages(media_[0], media_[1])
                         )
-                        await petercord.send_cached_media(
+                        await alpha.send_cached_media(
                             chat_id,
                             file_id=refeshed_f_id,
                             caption=caption,
@@ -197,8 +197,7 @@ class Bot_Alive:
                 ],
                 [InlineKeyboardButton(text="🎖 GNU GPL v3.0", url=copy_)],
             ]
-        )
-    return output, markup
+            return InlineKeyboardMarkup(buttons)
 
     @staticmethod
     def alive_default_imgs() -> str:
