@@ -3,10 +3,7 @@
 from alpha import Config, Message, alpha, versions
 
 
-@alpha.on_cmd("repo", about={"header": "Menunjukkan repo dengan detail/n/n"
-              "© [TheAlphaSupport](https://t.me/TheAlphaSupport)"}, 
-)
-
+@alpha.on_cmd("repo", about={"header": "get repo link and details"})
 async def see_repo(message: Message):
     """see repo"""
     output = f"""
