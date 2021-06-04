@@ -59,7 +59,7 @@ async def helpme(
             if cat == "plugins":
                 continue
             out_str += (
-                f"    {_CATEGORY.get(cat, '📁')} <b>{cat}</b> "
+                f"    {_CATEGORY.get(cat, '📙')} <b>{cat}</b> "
                 f"(<code>{len(cat_plugins[cat])}</code>) :   <code>"
                 + "</code>    <code>".join(sorted(cat_plugins[cat]))
                 + "</code>\n\n"
@@ -81,7 +81,7 @@ async def helpme(
             )
         ):
             commands = plugins[key].enabled_commands
-            out_str = f"""Perintah<b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
+            out_str = f"""⚙️ Perintah<b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
 
 📚 <b>Plugin:</b>  <code>{key}</code>
 ❕ <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
