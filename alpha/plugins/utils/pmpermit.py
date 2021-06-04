@@ -67,7 +67,7 @@ async def allow(message: Message):
             del_in=3)
 
 
-@.on_cmd("nopm", about={
+@alpha.on_cmd("nopm", about={
     'header': "Activates guarding on inbox",
     'flags': {"-all": "Delete all allowed PM's"},
     'description': "Ones someone is allowed, "
