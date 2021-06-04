@@ -89,7 +89,7 @@ async def handle_afk_incomming(message: Message) -> None:
             if REASON:
                 out_str = (
                     f"**Afk** Gua Lagi Afk.\n\n**Alasan*": <code>{REASON}</code>\n\n"
-                    f"  Terakhir Dilihat: `{afk_time} ago`"
+                    f"Terakhir Dilihat: `{afk_time} ago`"
                 )
             else:
                 out_str = choice(AFK_REASONS)
@@ -101,7 +101,7 @@ async def handle_afk_incomming(message: Message) -> None:
     else:
         if REASON:
             out_str = (
-                f"Afk **Gua Lagi Afk**.\n\nAlasan: <code>{REASON}</code>\n\n"
+                f"**Afk** Gua Lagi Afk.\n\n**Alasan**: <code>{REASON}</code>\n\n"
                 f"Terakhir Dilihat: `{afk_time} ago`"
             )
         else:
@@ -180,7 +180,7 @@ async def handle_afk_outgoing(message: Message) -> None:
         coro_list.append(CHANNEL.log(out_str))
         USERS.clear()
     else:
-        await asyncio.sleep(3)
+        await asyncio.sleep(1)
         coro_list.append(replied.delete())
     coro_list.append(
         asyncio.gather(
