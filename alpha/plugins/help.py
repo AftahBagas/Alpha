@@ -90,7 +90,7 @@ async def helpme(
                 )
             out_str += f"""⚙️ <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>
                         
-                        © [TheAlphaSupport](https://t.me/thealphasupport)"""
+© [TheAlphaSupport](t.me/thealphasupport)"""
         else:
             commands = alpha.manager.enabled_commands
             key = key.lstrip(Config.CMD_TRIGGER)
