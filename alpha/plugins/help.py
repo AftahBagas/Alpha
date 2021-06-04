@@ -21,15 +21,15 @@ from pyrogram.types import (
 from alpha import Config, Message, alpha, get_collection
 
 _CATEGORY = {
-    "admin": "👮",
-    "fun": "🥳",
-    "music": "🎧",
-    "misc": "⚙️",
-    "tools": "🧰",
-    "utils": "🗂",
-    "unofficial": "😈",
-    "temp": "💼",
-    "plugins": "📂",
+    "admin": "📙",
+    "fun": "📙",
+    "music": "📙",
+    "misc": "📙",
+    "tools": "📙",
+    "utils": "📙",
+    "unofficial": "📙",
+    "temp": "📙",
+    "plugins": "📙",
 }
 SAVED_SETTINGS = get_collection("CONFIGS")
 PRVT_MSGS = {}
@@ -43,7 +43,7 @@ async def _init() -> None:
 
 @alpha.on_cmd(
     "help",
-    about={"header": "Guide to use AlphaZ Plugins commands"},
+    about={"header": "Guide to use Alpha Userbot commands"},
     allow_channels=False,
 )
 async def helpme(
@@ -52,7 +52,7 @@ async def helpme(
     plugins = alpha.manager.enabled_plugins
     if not message.input_str:
         out_str = (
-            f"""⚙️ <b><u>(<code>{len(plugins)}</code>) Plugin(s) Available</u></b>\n\n"""
+            f"""📚 <b><u>(<code>{len(plugins)}</code>) Plugin(s) Available</u></b>\n\n"""
         )
         cat_plugins = alpha.manager.get_plugins()
         for cat in sorted(cat_plugins):
@@ -65,7 +65,9 @@ async def helpme(
                 + "</code>\n\n"
             )
         out_str += (
-            f"""⚙️ <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code>"""
+            f"""📖 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code>
+
+© @TheAlphaSupport"""
         )
     else:
         key = message.input_str
@@ -79,16 +81,16 @@ async def helpme(
             )
         ):
             commands = plugins[key].enabled_commands
-            out_str = f"""**Perintah** <b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
+            out_str = f"""Perintah<b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
 
-📔 <b>Plugin:</b>  <code>{key}</code>
+📚 <b>Plugin:</b>  <code>{key}</code>
 ❕ <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
             for i, cmd in enumerate(commands, start=1):
                 out_str += (
-                    f"    👾 <b>cmd(<code>{i}</code>):</b>  <code>{cmd.name}</code>\n"
+                    f"    📖 <b>cmd(<code>{i}</code>):</b>  <code>{cmd.name}</code>\n"
                     f"    📄 <b>info:</b>  <i>{cmd.doc}</i>\n\n"
                 )
-            out_str += f"""⚙️ <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>
+            out_str += f"""📖 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>
                         
 © @TheAlphaSupport"""
         else:
