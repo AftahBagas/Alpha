@@ -96,22 +96,22 @@ async def send_new_post(entries):
         args = {
             'caption': out_str,
             'parse_mode': "md",
-            'reply_markup': markup if userge.has_bot else None
+            'reply_markup': markup if alpha.has_bot else None
         }
     else:
         args = {
             'text': out_str,
             'disable_web_page_preview': True,
             'parse_mode': "md",
-            'reply_markup': markup if userge.has_bot else None
+            'reply_markup': markup if alpha.has_bot else None
         }
     for chat_id in RSS_CHAT_ID:
         args.update({'chat_id': chat_id})
         try:
-            await send_rss_to_telegram(userge.bot, args, thumb)
+            await send_rss_to_telegram(alpha.bot, args, thumb)
         except (
             ChatWriteForbidden, ChannelPrivate, ChatIdInvalid,
-            UserNotParticipant, UsergeBotNotFound
+            UserNotParticipant, AlphaBotNotFound
         ):
             out_str += f"\n\n[View Post Online]({link})"
             if 'caption' in args:
