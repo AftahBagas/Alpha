@@ -180,7 +180,7 @@ async def handle_afk_outgoing(message: Message) -> None:
         coro_list.append(CHANNEL.log(out_str))
         USERS.clear()
     else:
-        await asyncio.sleep(4)
+        await asyncio.sleep(3)
         coro_list.append(replied.delete())
     coro_list.append(
         asyncio.gather(
