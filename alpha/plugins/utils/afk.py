@@ -88,7 +88,7 @@ async def handle_afk_incomming(message: Message) -> None:
         if not (USERS[user_id][0] + USERS[user_id][1]) % randint(2, 4):
             if REASON:
                 out_str = (
-                    f"**Afk** Gua Lagi Afk.\n\n**Alasan**: <code>{REASON}</code>\n\n"
+                    f"**Afk** Gua Lagi Afk.\n **Karena**: <code>{REASON}</code>\n\n"
                     f"Terakhir Dilihat: `{afk_time} ago`"
                 )
             else:
@@ -101,7 +101,7 @@ async def handle_afk_incomming(message: Message) -> None:
     else:
         if REASON:
             out_str = (
-                f"**Afk** Gua Lagi Afk.\n\n**Alasan**: <code>{REASON}</code>\n\n"
+                f"**Afk** Gua Lagi Afk.\n **Karena**: <code>{REASON}</code>\n\n"
                 f"Terakhir Dilihat: `{afk_time} ago`"
             )
         else:
