@@ -184,7 +184,7 @@ async def gmute_at_entry(msg: Message):
             await asyncio.gather(
                 msg.client.restrict_chat_member(chat_id, user_id, ChatPermissions()),
                 msg.reply(
-                    r"\\**#Userge_Antispam**//"
+                    r"\\**#Alpha_Antispam**//"
                     "\n\nGlobally Muted Pengguna Terdeteksi di Obrolan ini.\n\n"
                     f"**User:** [{first_name}](tg://user?id={user_id})\n"
                     f"**ID:** `{user_id}`\n**Reason:** `{gmuted['reason']}`\n\n"
