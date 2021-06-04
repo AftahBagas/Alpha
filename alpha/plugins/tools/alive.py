@@ -34,10 +34,8 @@ _LOGO_ID = None
 
 
 @alpha.on_cmd(
-    "alive", =={
-        "header": "Alive Logo",
-        "description": "Command Untuk Menunjukkan Logo Alive Alpha\n\n"
-        "© [TheAlphaSupport](https://t.me/thealphasupport)"}, allow_channels=False
+    "alive", about={"header": "This command is just for fun/n/n"
+    "© [TheAlphaSupport](https://t.me/TheAlphaSupport)}, allow_channels=False
 )
 async def alive(message: Message):
     if not (_CHAT and _MSG_ID):
