@@ -6,7 +6,7 @@ from alpha import Config, Message, alpha, versions
 @alpha.on_cmd("repo",about={
         "header": "Repo Alpha Userbot",
         "description": "Kirim Link Repo Dengan Detail\n\n"
-        "© [TheAlphaSupport](https://t.me/thealphasupport)}
+        "© [TheAlphaSupport](https://t.me/thealphasupport)"}
 async def see_repo(message: Message):
     """see repo"""
     output = f"""
