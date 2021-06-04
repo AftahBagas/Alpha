@@ -1,4 +1,4 @@
-# All rights reserved.
+# Alfareza
 
 import os
 import asyncio
