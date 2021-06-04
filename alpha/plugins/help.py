@@ -348,18 +348,18 @@ if alpha.has_bot:
             f"**(`{len(plugins)}`) Plugin(s) Under : "
             f"`{_CATEGORY.get(pos_list[1], '📁')} {pos_list[1]}` 🎉 Category**"
         )
-        buttons = parse_buttons(0, "|".join(pos_list[:2]), lambda x: f"🗃 {x}", plugins)
+        buttons = parse_buttons(0, "|".join(pos_list[:2]), lambda x: f"📁 {x}", plugins)
         return text, buttons
 
     def plugin_data(cur_pos: str, p_num: int = 0):
         pos_list = cur_pos.split("|")
         plg = alpha.manager.plugins[pos_list[2]]
-        text = f"""🗃 **--Plugin Status--** 🗃
+        text = f"""📁 **--Plugin Status--** 📁
 🎉 **Category** : `{pos_list[1]}`
 🔖 **Name** : `{plg.name}`
 📝 **Doc** : `{plg.doc}`
 ⚙️ **Commands** : `{len(plg.commands)}`
-⚖ **Filters** : `{len(plg.filters)}`
+🥽 **Filters** : `{len(plg.filters)}`
 ✅ **Loaded** : `{plg.is_loaded}`
 ➕ **Enabled** : `{plg.is_enabled}`
 """
@@ -417,7 +417,7 @@ if alpha.has_bot:
 {flt.about}
 """
         else:
-            text = f"""⚖ **--Filter Status--** ⚖
+            text = f"""🥽 **--Filter Status--** 🥽
 {flt_data}
 """
         buttons = default_buttons(cur_pos)
