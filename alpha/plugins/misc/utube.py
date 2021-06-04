@@ -48,7 +48,7 @@ __{uploader}__
         await message.edit(out)
 
 
-@userge.on_cmd("ytdl", about={'header': "Download from youtube",
+@alpha.on_cmd("ytdl", about={'header': "Download from youtube",
                               'options': {'-a': 'select the audio u-id',
                                           '-v': 'select the video u-id',
                                           '-m': 'extract the mp3 in 320kbps',
