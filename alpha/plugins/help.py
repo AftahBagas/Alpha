@@ -80,14 +80,14 @@ async def helpme(
         ):
             commands = plugins[key].enabled_commands
             out_str = f"""CMD <b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
-🔐 <b>Plugin:</b>  <code>{key}</code>
-📘 <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
+🔑 <b>Plugin:</b>  <code>{key}</code>
+❕ <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
             for i, cmd in enumerate(commands, start=1):
                 out_str += (
                     f"    👾 <b>cmd(<code>{i}</code>):</b>  <code>{cmd.name}</code>\n"
-                    f"    📔 <b>info:</b>  <i>{cmd.doc}</i>\n\n"
+                    f"    📄 <b>info:</b>  <i>{cmd.doc}</i>\n\n"
                 )
-            out_str += f"""⚙️ <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>"""
+            out_str += f"""⚙️ <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>/n/n© [TheAlphaSupport](https://t.me/thealphasupport)"""
         else:
             commands = alpha.manager.enabled_commands
             key = key.lstrip(Config.CMD_TRIGGER)
