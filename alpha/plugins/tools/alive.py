@@ -36,7 +36,7 @@ _LOGO_ID = None
 @alpha.on_cmd(
     "alive", about={
         "header": "Alive Logo",
-        "description": "Command Untuk Menunjukkan Logo Alive Alpha\n\n
+        "description": "Command Untuk Menunjukkan Logo Alive Alpha\n\n",
         "© [TheAlphaSupport](https://t.me/thealphasupport)"}, allow_channels=False
 )
 async def alive(message: Message):
