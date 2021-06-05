@@ -327,7 +327,7 @@ class SCLib(_BaseLib):
         pool.submit_thread(self._combine_worker, file_list)
 
 
-@userge.on_cmd('ls', about={
+@alpha.on_cmd('ls', about={
     'header': "list directory",
     'usage': "{tr}ls [path]\n{tr}ls -d : default path"}, allow_channels=False)
 async def ls_dir(message: Message) -> None:
