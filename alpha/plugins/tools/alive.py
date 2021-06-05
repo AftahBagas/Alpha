@@ -75,8 +75,8 @@ def _get_alive_text_and_markup(
     output = f"""**Alpha Userbot Is Running 🔥!..**\n
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
 **❍ ⏱️ • uptime** : `{alpha.uptime}`
-**❍ 🧪 • version** : `0.3.2`
-**❍ 😈 • mode** : `{_get_mode()}`
+**❍ 🧪 • version** : `{get_version()}`
+**❍ 😈 • mode** : `{_get_mode().upper()}`
 
 **❍ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
 **❍ ⚙️ • Pm-Guard**: `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
