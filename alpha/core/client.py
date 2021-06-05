@@ -28,6 +28,23 @@ _IMPORTED: List[ModuleType] = []
 _INIT_TASKS: List[asyncio.Task] = []
 _START_TIME = time.time()
 
+_ALPHA_STATUS = get_collection("ALPHA_STATUS")
+
+
+async def _set_running(is_running: bool) -> None:
+    await _ALPHA_STATUS.update_one(
+        {'_id': 'ALPHA_STATUS'},
+        {"$set": {'is_running': is_running}},
+        upsert=True
+    )
+
+
+async def _is_running() -> bool:
+    data = await _ALPHA_STATUS.find_one({'_id': 'ALPHA_STATUS'})
+    if data:
+        return bool(data['is_running'])
+    return False
+
 
 async def _complete_init_tasks() -> None:
     if not _INIT_TASKS:
