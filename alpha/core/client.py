@@ -178,7 +178,7 @@ class Alpha(_AbstractAlpha):
         """ start client and bot """
         counter = 0
         timeout = 5  # 5 sec
-        max_ = 60  # 1 min
+        max_ = 10  # 10 sec
 
         while True:
             if await _is_running():
