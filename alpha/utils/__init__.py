@@ -7,6 +7,7 @@ from .tools import (sort_file_name_key, # noqa
                     demojify,
                     humanbytes,
                     time_formatter,
+                    get_emoji_regexp,
                     post_to_telegraph,
                     runcmd,
                     take_screen_shot,
