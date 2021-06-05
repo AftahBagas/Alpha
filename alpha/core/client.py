@@ -177,8 +177,8 @@ class Alpha(_AbstractAlpha):
     async def start(self) -> None:
         """ start client and bot """
         counter = 0
-        timeout = 30  # 30 sec
-        max_ = 1800  # 30 min
+        timeout = 5  # 5 sec
+        max_ = 60  # 1 min
 
         while True:
             if await _is_running():
