@@ -61,6 +61,7 @@ class Config:
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
     LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
+    ASSERT_SINGLE_INSTANCE = os.environ.get("ASSERT_SINGLE_INSTANCE", "false").lower() == "true"
     THUMB_PATH = DOWN_PATH + "thumb_image.jpg"
     TMP_PATH = "alpha/plugins/temp/"
     MAX_MESSAGE_LENGTH = 4096
