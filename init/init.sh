@@ -15,7 +15,7 @@ handleSig() {
     killProc
 }
 
-initUserge() {
+initAlpha() {
     printLogo
     assertPrerequisites
     sendMessage "Initializing Alpha ..."
@@ -24,18 +24,18 @@ initUserge() {
     printLine
 }
 
-startUserge() {
+startAlpha() {
     startLogBotPolling
     runPythonModule alpha "$@"
     waitProc
 }
 
-stopUserge() {
+stopAlpha() {
     sendMessage "Exiting Alpha ..."
     endLogBotPolling
 }
 
-runUserge() {
+runAlpha() {
     initAlpha
     startAlpha "$@"
     local code=$?
