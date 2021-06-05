@@ -54,7 +54,7 @@ async def progress(current: int,
             file_name,
             ''.join((alpha.Config.FINISHED_PROGRESS_STR
                      for _ in range(floor(percentage / 5)))),
-            ''.join((userge.Config.UNFINISHED_PROGRESS_STR
+            ''.join((alpha.Config.UNFINISHED_PROGRESS_STR
                      for _ in range(20 - floor(percentage / 5)))),
             round(percentage, 2),
             humanbytes(current),
