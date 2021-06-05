@@ -946,7 +946,7 @@ class Worker(_GDrive):
             caption=f"removed perm results for `{file_id}`")
 
 
-@userge.on_cmd("gsetup", about={
+@alpha.on_cmd("gsetup", about={
     'header': "Setup GDrive Creds"})
 async def gsetup_(message: Message):
     """ setup creds """
