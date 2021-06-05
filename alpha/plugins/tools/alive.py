@@ -76,7 +76,7 @@ def _get_alive_text_and_markup(
 **╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
 **❍ ⏱️ • uptime** : `{alpha.uptime}`
 **❍ 🧪 • version** : `0.3.2`
-**❍ 😈 • mode** : `{mode}`
+**❍ 😈 • mode** : `{_get_mode()}`
 
 **❍ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
 **❍ ⚙️ • Pm-Guard**: `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
