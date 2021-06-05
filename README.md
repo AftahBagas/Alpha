@@ -1,2 +1,2 @@
 # Alpha
-Pyogram based repository
+Pyrogram based repository
