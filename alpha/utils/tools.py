@@ -4,7 +4,6 @@ import re
 import shlex
 import asyncio
 from os.path import basename, join, exists
-from demojify import get_emoji_regexp
 from typing import Tuple, List, Optional, Iterator, Union
 
 from html_telegraph_poster import TelegraphPoster
