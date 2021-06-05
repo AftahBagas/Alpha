@@ -32,7 +32,7 @@ class RawClient(Client):
         self._bot = bot
         super().__init__(**kwargs)
         self._channel = alpha.core.types.new.ChannelLogger(self, "CORE")
-        userge.core.types.new.Conversation.init(self)
+        alpha.core.types.new.Conversation.init(self)
 
     async def send(self, data: TLObject, retries: int = Session.MAX_RETRIES,
                    timeout: float = Session.WAIT_TIMEOUT, sleep_threshold: float = None):
