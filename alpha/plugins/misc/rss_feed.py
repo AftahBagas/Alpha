@@ -133,7 +133,7 @@ async def send_rss_to_telegram(client, args: dict, path: str = None):
         await client.send_message(**args)
 
 
-@userge.on_cmd("addfeed", about={
+@alpha.on_cmd("addfeed", about={
     'header': "Add new Feed Url to get regular Updates from it.",
     'usage': "{tr}addfeed url"})
 async def add_rss_feed(msg: Message):
