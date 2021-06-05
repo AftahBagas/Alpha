@@ -28,7 +28,7 @@ _INIT_TASKS: List[asyncio.Task] = []
 _START_TIME = time.time()
 _SEND_SIGNAL = False
 
-_ALPHA_STATUS = get_collection("ALPHA_STATUS")
+_ALPHA_STATUS = ("ALPHA_STATUS")
 
 
 async def _set_running(is_running: bool) -> None:
