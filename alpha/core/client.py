@@ -26,6 +26,25 @@ _LOG_STR = "<<<!  #####  %s  #####  !>>>"
 _IMPORTED: List[ModuleType] = []
 _INIT_TASKS: List[asyncio.Task] = []
 _START_TIME = time.time()
+_SEND_SIGNAL = False
+
+_USERGE_STATUS = get_collection("ALPHA_STATUS")
+
+
+async def _set_running(is_running: bool) -> None:
+    await _ALPHA_STATUS.update_one(
+        {'_id': 'ALPHA_STATUS'},
+        {"$set": {'is_running': is_running}},
+        upsert=True
+    )
+
+
+async def _is_running() -> bool:
+    if Config.ASSERT_SINGLE_INSTANCE:
+        data = await _ALPHA_STATUS.find_one({'_id': 'ALPH_STATUS'})
+        if data:
+            return bool(data['is_running'])
+    return False
 
 
 async def _complete_init_tasks() -> None:
@@ -37,6 +56,12 @@ async def _complete_init_tasks() -> None:
 
 class _AbstractAlpha(Methods, RawClient):
     @property
+    def id(self) -> int:
+        if self.is_bot:
+            return RawClient.BOT_ID
+        return RawClient.USER_ID
+
+    @property
     def is_bot(self) -> bool:
         """ returns client is bot or not """
         if self._bot is not None:
@@ -45,7 +70,7 @@ class _AbstractAlpha(Methods, RawClient):
 
     @property
     def uptime(self) -> str:
-        """ returns alpha plugins uptime """
+        """ returns alpha uptime """
         return time_formatter(time.time() - _START_TIME)
 
     async def finalize_load(self) -> None:
@@ -96,15 +121,21 @@ class _AbstractAlpha(Methods, RawClient):
         await self.finalize_load()
         return len(reloaded)
 
+    def __eq__(self, o: object) -> bool:
+        return isinstance(o, _AbstractAlpha) and self.id == o.id
+
+    def __hash__(self) -> int:
+        return super().__hash__()
+
 
 class AlphaBot(_AbstractAlpha):
-    """ Alpha, the bot """
+    """ AlphaBot, the bot """
     def __init__(self, **kwargs) -> None:
         _LOG.info(_LOG_STR, "Setting AlphaBot Configs")
         super().__init__(session_name=":memory:", **kwargs)
 
     @property
-    def ubot(self) -> 'alpha':
+    def ubot(self) -> 'Alpha':
         """ returns userbot """
         return self._bot
 
@@ -132,6 +163,10 @@ class Alpha(_AbstractAlpha):
         self.executor = pool._get()  # pylint: disable=protected-access
 
     @property
+    def dual_mode(self) -> bool:
+        return RawClient.DUAL_MODE
+
+    @property
     def bot(self) -> Union['AlphaBot', 'Alpha']:
         """ returns alphabot """
         if self._bot is None:
@@ -142,7 +177,22 @@ class Alpha(_AbstractAlpha):
 
     async def start(self) -> None:
         """ start client and bot """
+        counter = 0
+        timeout = 30  # 30 sec
+        max_ = 1800  # 30 min
+
+        while await _is_running():
+            _LOG.info(_LOG_STR, "Waiting for the Termination of "
+                                f"previous Userge instance ... [{timeout} sec]")
+            time.sleep(timeout)
+
+            counter += timeout
+            if counter >= max_:
+                _LOG.info(_LOG_STR, f"Max timeout reached ! [{max_} sec]")
+                break
+
         _LOG.info(_LOG_STR, "Starting Alpha")
+        await _set_running(True)
         await super().start()
         if self._bot is not None:
             _LOG.info(_LOG_STR, "Starting AlphaBot")
@@ -156,18 +206,26 @@ class Alpha(_AbstractAlpha):
             await self._bot.stop()
         _LOG.info(_LOG_STR, "Stopping Alpha")
         await super().stop()
+        await _set_running(False)
         _close_db()
         pool._stop()  # pylint: disable=protected-access
 
     def begin(self, coro: Optional[Awaitable[Any]] = None) -> None:
         """ start alpha """
         lock = asyncio.Lock()
+        loop_is_stopped = asyncio.Event()
         running_tasks: List[asyncio.Task] = []
+
+        async def _waiter() -> None:
+            try:
+                await asyncio.wait_for(loop_is_stopped.wait(), 30)
+            except asyncio.exceptions.TimeoutError:
+                pass
 
         async def _finalize() -> None:
             async with lock:
-                for task in running_tasks:
-                    task.cancel()
+                for t in running_tasks:
+                    t.cancel()
                 if self.is_initialized:
                     await self.stop()
                 else:
@@ -178,20 +236,37 @@ class Alpha(_AbstractAlpha):
             await self.loop.shutdown_asyncgens()
             self.loop.stop()
             _LOG.info(_LOG_STR, "Loop Stopped !")
+            loop_is_stopped.set()
 
-        async def _shutdown(sig: signal.Signals) -> None:
-            _LOG.info(_LOG_STR, f"Received Stop Signal [{sig.name}], Exiting Alpha ...")
+        async def _shutdown(_sig: signal.Signals) -> None:
+            global _SEND_SIGNAL  # pylint: disable=global-statement
+            _LOG.info(_LOG_STR, f"Received Stop Signal [{_sig.name}], Exiting Alpha ...")
             await _finalize()
+            if _sig == _sig.SIGUSR1:
+                _SEND_SIGNAL = True
 
-        for sig in (signal.SIGHUP, signal.SIGTERM, signal.SIGINT):
+        for sig in (signal.SIGHUP, signal.SIGTERM, signal.SIGINT, signal.SIGUSR1):
             self.loop.add_signal_handler(
-                sig, lambda sig=sig: self.loop.create_task(_shutdown(sig)))
-        self.loop.run_until_complete(self.start())
+                sig, lambda _sig=sig: self.loop.create_task(_shutdown(_sig)))
+
+        def _close_loop() -> None:
+            self.loop.run_until_complete(_waiter())
+            self.loop.close()
+            _LOG.info(_LOG_STR, "Loop Closed !")
+
+        try:
+            self.loop.run_until_complete(self.start())
+        except RuntimeError:
+            _close_loop()
+            return
+
         for task in self._tasks:
             running_tasks.append(self.loop.create_task(task()))
+
         logbot.edit_last_msg("Alpha has Started Successfully !")
         logbot.end()
         mode = "[DUAL]" if RawClient.DUAL_MODE else "[BOT]" if Config.BOT_TOKEN else "[USER]"
+
         try:
             if coro:
                 _LOG.info(_LOG_STR, f"Running Coroutine - {mode}")
@@ -203,5 +278,6 @@ class Alpha(_AbstractAlpha):
         except (asyncio.exceptions.CancelledError, RuntimeError):
             pass
         finally:
-            self.loop.close()
-            _LOG.info(_LOG_STR, "Loop Closed !")
+            _close_loop()
+            if _SEND_SIGNAL:
+                os.kill(os.getpid(), signal.SIGUSR1)
