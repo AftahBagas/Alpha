@@ -20,7 +20,7 @@ async def genStrSession() -> None:  # pylint: disable=missing-function-docstring
         print("\nprocessing...")
         doneStr = "sent to saved messages!"
         try:
-            await userge.send_message(
+            await alpha.send_message(
                 "me", f"#ALPHA #HU_STRING_SESSION\n\n```{await alpha.export_session_string()}```"
             )
         except UserIsBot:
