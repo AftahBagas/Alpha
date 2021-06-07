@@ -1,4 +1,4 @@
-# alfareza
+#Alpha
 
 declare -r minPVer=8
 declare -r maxPVer=9
@@ -37,8 +37,7 @@ runPythonCode() {
 }
 
 runPythonModule() {
-    python${pVer%.*} -m "$@" &
-    setProc $!
+    python${pVer%.*} -m "$@"
 }
 
 gitInit() {
@@ -87,7 +86,7 @@ upgradePip() {
 }
 
 installReq() {
-    pip3 install -r $1/requirements.txt &> /dev/null
+    pip3 install -U -r $1/requirements.txt &> /dev/null
 }
 
 printLine() {
@@ -105,7 +104,7 @@ printLogo() {
          (______)   (𝗛)   (______)
          (_____)    (𝗔)    (_____)
          (_______________________)
-         (_______________________)                                                  
+         (_______________________)    
 '
     printLine
 }
