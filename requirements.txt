@@ -4,6 +4,8 @@ bs4
 covid
 cowpy
 dnspython
+typing
+traceback
 emoji==0.6.0
 feedparser
 ffmpeg-python
