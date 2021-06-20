@@ -3,6 +3,8 @@ aiohttp
 bs4
 covid
 cowpy
+traceback
+typing
 dnspython
 emoji==0.6.0
 feedparser
