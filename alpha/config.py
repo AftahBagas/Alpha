@@ -23,6 +23,7 @@ class Config:
 
     API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")
+    ALIVE_MSG = os.environ.get("ALIVE_MSG", "Alpha Userbot Is Running")
     WORKERS = int(os.environ.get("WORKERS")) or os.cpu_count() + 4
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
     HU_STRING_SESSION = os.environ.get("HU_STRING_SESSION", None)
