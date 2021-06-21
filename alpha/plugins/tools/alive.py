@@ -74,9 +74,9 @@ def _get_alive_text_and_markup(
     markup = None
     output = f"""**{ALIVE_MSG}**\n
 **╭━─━─━─━─≪✠≫─━─━─━╮**\n
-**☉ ⏱️ • uptime :** `{alpha.uptime}`
-**☉ 🧪 • version :** `{get_version()}`
-**☉ 😈 • mode :** `{_get_mode().upper()}`
+**☉ ⏱️ • Uptime :** `{alpha.uptime}`
+**☉ 🧪 • Version :** `{get_version()}`
+**☉ 😈 • Mode :** `{_get_mode().upper()}`
 **╭━─━─━─━─━─━─━─━─━╮**\n
 **☉ 👥 • Sudo :** `{_parse_arg(Config.SUDO_ENABLED)}`
 **☉ ⚙️ • Pm-Guard :** `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
