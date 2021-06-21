@@ -1,16 +1,7 @@
-
-
-
-
-
-
-
-
 <p align="center">
    <a href="https://github.com/AftahBagas/Alpha"><img src="https://telegra.ph/file/6c2f9da7d5329ab9395d3.jpg" alt="Alpha" width=400px></a>
    <br>
    <br>
-
 <p align="center">
     <a href="https://github.com/AftahBagas/Alpha">
     </a>
