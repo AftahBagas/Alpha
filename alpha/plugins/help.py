@@ -65,9 +65,7 @@ async def helpme(
                 + "</code>\n\n"
             )
         out_str += (
-            f"""📖 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code>
-
-© @TheAlphaSupport"""
+            f"""📖 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code>"""
         )
     else:
         key = message.input_str
@@ -90,9 +88,7 @@ async def helpme(
                     f"    📖 <b>cmd(<code>{i}</code>):</b>  <code>{cmd.name}</code>\n"
                     f"    📄 <b>info:</b>  <i>{cmd.doc}</i>\n\n"
                 )
-            out_str += f"""📖 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>
-                        
-© @TheAlphaSupport"""
+            out_str += f"""📖 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>"""
         else:
             commands = alpha.manager.enabled_commands
             key = key.lstrip(Config.CMD_TRIGGER)
@@ -147,14 +143,14 @@ if alpha.has_bot:
             buttons = parse_buttons(
                 p_num,
                 cur_pos,
-                lambda x: f"{_CATEGORY.get(x, '📂')} {x}",
+                lambda x: f"{_CATEGORY.get(x, '📙')} {x}",
                 alpha.manager.get_all_plugins(),
             )
         elif len(pos_list) == 2:
             buttons = parse_buttons(
                 p_num,
                 cur_pos,
-                lambda x: f"🗂️ {x}",
+                lambda x: f"📙 {x}",
                 alpha.manager.get_all_plugins()[pos_list[-1]],
             )
         elif len(pos_list) == 3:
@@ -348,7 +344,7 @@ if alpha.has_bot:
         plugins = alpha.manager.get_all_plugins()[pos_list[1]]
         text = (
             f"**(`{len(plugins)}`) Plugin(s) Under : "
-            f"`{_CATEGORY.get(pos_list[1], '📁')} {pos_list[1]}` 🎉 Category**"
+            f"`{_CATEGORY.get(pos_list[1], '📙')} {pos_list[1]}` 🎉 Category**"
         )
         buttons = parse_buttons(0, "|".join(pos_list[:2]), lambda x: f"📁 {x}", plugins)
         return text, buttons
@@ -356,10 +352,10 @@ if alpha.has_bot:
     def plugin_data(cur_pos: str, p_num: int = 0):
         pos_list = cur_pos.split("|")
         plg = alpha.manager.plugins[pos_list[2]]
-        text = f"""📁 **--Plugin Status--** 📁
-🎉 **Category** : `{pos_list[1]}`
-🔖 **Name** : `{plg.name}`
-📝 **Doc** : `{plg.doc}`
+        text = f"""📙 **--Plugin Status--** 📙
+📚 **Category** : `{pos_list[1]}`
+💳 **Name** : `{plg.name}`
+📑 **Doc** : `{plg.doc}`
 ⚙️ **Commands** : `{len(plg.commands)}`
 🥽 **Filters** : `{len(plg.filters)}`
 ✅ **Loaded** : `{plg.is_loaded}`
@@ -408,8 +404,8 @@ if alpha.has_bot:
         flts = {flt.name: flt for flt in plg.commands + plg.filters}
         flt = flts[pos_list[-1]]
         flt_data = f"""
-🔖 **Name** : `{flt.name}`
-📝 **Doc** : `{flt.doc}`
+💳 **Name** : `{flt.name}`
+📑 **Doc** : `{flt.doc}`
 🤖 **Via Bot** : `{flt.allow_via_bot}`
 ✅ **Loaded** : `{flt.is_loaded}`
 ➕ **Enabled** : `{flt.is_enabled}`"""
@@ -458,7 +454,7 @@ if alpha.has_bot:
                 id=uuid4(),
                 title="Repo",
                 input_message_content=InputTextMessageContent(
-                    "**Deploy Alpha Userbot** 😈"
+                    "**Deploy Alpha Userbot**"
                 ),
                 url="https://github.com/AftahBagas/Alpha",
                 description="Siapkan Milik Anda",
@@ -467,13 +463,13 @@ if alpha.has_bot:
                     [
                         [
                             InlineKeyboardButton(
-                                "👑 Repo", url="https://github.com/AftahBagas/Alpha"
+                                "Repo", url="https://github.com/AftahBagas/Alpha"
                             ),
                             InlineKeyboardButton(
-                                "🤵 Owner", url="https://t.me/kanjengingsun"
+                                "Owner", url="https://t.me/kanjengingsun"
                             ),
                             InlineKeyboardButton(
-                                "😈 Deploy",
+                                "Deploy",
                                 url=(
                                     "https://heroku.com/deploy?template="
                                     "https://github.com/AftahBagas/Apack"
