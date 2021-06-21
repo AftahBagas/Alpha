@@ -92,7 +92,7 @@ def _get_alive_text_and_markup(
 \n**╰━─━─━─━─━─━─━─━─━╯**"""
     if not message.client.is_bot:
         output += f"""\n
-🎖 **{versions.__license__}** | 😈 **{versions.__copyright__}** | 🔮 **[Repo]({Config.UPSTREAM_REPO})**
+🎖 **{versions.__license__}** | 👾 **{versions.__copyright__}** | 🧪 **[Repo]({Config.UPSTREAM_REPO})**
 """
     else:
         copy_ = "https://github.com/AftahBagas/AlphaZ-Plugins/blob/alpha/LICENSE"
@@ -100,7 +100,7 @@ def _get_alive_text_and_markup(
             [
                 [
                     InlineKeyboardButton(
-                        text="😈 Github", url="https://github.com/AftahBagas"
+                        text="👾 Github", url="https://github.com/AftahBagas"
                     ),
                     InlineKeyboardButton(text="🧪 Repo", url=Config.UPSTREAM_REPO),
                 ],
