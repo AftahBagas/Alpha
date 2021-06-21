@@ -35,7 +35,6 @@
 ![Contributors](https://img.shields.io/github/contributors/AftahBagas/Alpha)
 ![Repo Size](https://img.shields.io/github/repo-size/AftahBagas/Alpha)
 ![License](https://img.shields.io/github/license/AftahBagas/Alpha)
-![Commit Activity](https://img.shields.io/github/commit-activity/m/AftahBagas/Alpha)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/AftahBagas/Alpha)
 
 **Alpha** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
