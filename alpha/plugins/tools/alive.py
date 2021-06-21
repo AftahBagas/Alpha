@@ -31,7 +31,7 @@ _IS_STICKER = False
 _DEFAULT = "https://t.me/AlphaZPlugins/9"
 _CHAT, _MSG_ID = None, None
 _LOGO_ID = None
-
+_ALIVE_MSG = "Alpha Userbot Is Running"
 
 @alpha.on_cmd(
     "alive", about={"header": "This command is just for fun"}, allow_channels=False
@@ -72,24 +72,24 @@ def _get_alive_text_and_markup(
     message: Message,
 ) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
     markup = None
-    output = f"""**Alpha Userbot Is Running 🔥!..**\n
-**╭━─━─━─━─≪✠≫─━─━─━─━╮**\n
-**❍ ⏱️ • uptime** : `{alpha.uptime}`
-**❍ 🧪 • version** : `0.4.0`
-**❍ 😈 • mode** : `{_get_mode().upper()}`
-
-**❍ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
-**❍ ⚙️ • Pm-Guard**: `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
-**❍ 🖐️ • Anti-Spam**: `{_parse_arg(Config.ANTISPAM_SENTRY)}`"""
+    output = f"""**{ALIVE_MSG}**\n
+**╭━─━─━─━─≪✠≫─━─━─━╮**\n
+**☉ ⏱️ • uptime** : `{alpha.uptime}`
+**☉ 🧪 • version** : `0.4.0`
+**☉ 😈 • mode** : `{_get_mode().upper()}`
+**╭━─━─━─━─━─━─━─━─━╮**\n
+**☉ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
+**☉ ⚙️ • Pm-Guard**: `{_parse_arg(not Config.ALLOW_ALL_PMS)}`
+**☉ 🖐️ • Anti-Spam**: `{_parse_arg(Config.ANTISPAM_SENTRY)}`"""
 
     if Config.HEROKU_APP:
-        output += f"\n❍ **🌐 • Dyno-saver**: `{_parse_arg(Config.RUN_DYNO_SAVER)}`"
+        output += f"\n☉ **🌐 • Dyno-saver**: `{_parse_arg(Config.RUN_DYNO_SAVER)}`"
     output += f"""
-**❍ 🚀 • Unofficial**: `{_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}`
+**☉ 🚀 • Unofficial**: `{_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}`
 
-  🐍**__Python__**: `{versions.__python_version__}`
-  💻**__Pyrogram__**: `{versions.__pyro_version__}`
-\n**╰━─━─━─━─━─━─━─━─━─━╯**"""
+  • 🐍**__Python__**: `{versions.__python_version__}`
+  • 💻**__Pyrogram__**: `{versions.__pyro_version__}`
+\n**╰━─━─━─━─━─━─━─━─━╯**"""
     if not message.client.is_bot:
         output += f"""\n
 🎖 **{versions.__license__}** | 😈 **{versions.__copyright__}** | 🔮 **[Repo]({Config.UPSTREAM_REPO})**
