@@ -4,9 +4,9 @@
    <br>
 <p align="center">
     <a href="https://github.com/AftahBagas/Alpha">
-    <b>Pluggable Telegram UserBot</b>
     </a>
     <br>
+    <b>Pluggable Telegram UserBot</b>
     <br>
     <a href="https://github.com/AftahBagas/Alpha#documentation-">Documentation</a>
     &nbsp•&nbsp
