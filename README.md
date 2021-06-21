@@ -50,9 +50,6 @@
 ![Repo Size](https://img.shields.io/github/repo-size/AftahBagas/Alpha)
 ![License](https://img.shields.io/github/license/AftahBagas/Alpha)
 ![Commit Activity](https://img.shields.io/github/commit-activity/m/AftahBagas/Alpha)
-[![Plugins Repo!](https://img.shields.io/badge/Plugins%20Repo-!-orange)](https://github.com/AftahBagas/AlphaPlugins)
-[![Join Channel!](https://img.shields.io/badge/Join%20Channel-!-red)](https://t.me/TeamSquadUserbotSupport)
-[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/AftahBagas/Alpha/?ref=repository-badge)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/AftahBagas/Alpha)
 
 **Alpha** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
