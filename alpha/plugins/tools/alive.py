@@ -19,7 +19,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from alpha import Config, Message, alpha, logging, versions
+from alpha import Config, Message, alpha, logging, versions, get_version
 from alpha.core.ext import pool
 from alpha.utils import get_file_id_of_media
 
@@ -75,7 +75,7 @@ def _get_alive_text_and_markup(
     output = f"""**{ALIVE_MSG}**\n
 **╭━─━─━─━─≪✠≫─━─━─━╮**\n
 **☉ ⏱️ • uptime** : `{alpha.uptime}`
-**☉ 🧪 • version** : `0.4.0`
+**☉ 🧪 • version** : `{get_version}`
 **☉ 😈 • mode** : `{_get_mode().upper()}`
 **╭━─━─━─━─━─━─━─━─━╮**\n
 **☉ 👥 • Sudo**: `{_parse_arg(Config.SUDO_ENABLED)}`
