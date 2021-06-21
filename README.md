@@ -1,13 +1,3 @@
-<p align="center">
-    <img alt="ALPHA VERSION" src="https://img.shields.io/badge/ALPHA%20VERSION-4.+-brightgreen"/>
-    <img alt="BUILD IN" src="https://img.shields.io/badge/BUILD%20-Last Day-brightgreen"/>
-           <a href="https://travis-ci.com/AftahBagas/Alpha.svg?branch=Alpha" /></a>
-    <a href="https://github.com/AftahBagas/Alpha/network/members"> <img src="https://img.shields.io/github/forks/AftahBagas/Alpha?logo=github&style=for-the-badge" /></a>
-           <a href="https://app.codacy.com/gh/AftahBagas/Alpha/dashboard"> <img src="https://img.shields.io/codacy/grade/a8f0747a964e4712818a28d2a7f4edd3?color=blue&logo=codacy&style=for-the-badge" alt="Codacy" /></a>
-    <a href="https://github.com/AftahBagas/Alpha"> <img src="https://img.shields.io/github/repo-size/AftahBagas/Alpha?logo=github&style=for-the-badge" /></a>
-    <a href="https://pypi.org/project/Telethon/"> <img src="https://img.shields.io/pypi/v/telethon?label=telethon&logo=pypi&logoColor=white&style=for-the-badge" /></a>
-    <img alt="PYTHON" src="https://img.shields.io/badge/PYTHON-v3.9.0-blue?style=for-the-badge&logo=appveyor"/>
-   </p>
 
 
 
@@ -26,6 +16,44 @@
 <br>
 <br>
 
+<p align="center">
+    <a href="https://github.com/AftahBagas/Alpha">
+    </a>
+    <br>
+    <b>Pluggable Telegram UserBot</b>
+    <br>
+    <a href="https://github.com/AftahBagas/Alpha#documentation-">Documentation</a>
+    &nbsp•&nbsp
+    <a href="https://github.com/AftahBagas/Alpha#inspiration-">Inspiration</a>
+    &nbsp•&nbsp
+    <a href="https://github.com/AftahBagas/Alpha#features-">Features</a>
+    &nbsp•&nbsp
+    <a href="https://github.com/AftahBagas/Alpha#example-plugin-">Example</a>
+    &nbsp•&nbsp
+    <a href="https://github.com/AftahBagas/Alpha#project-credits-">Project Credits</a>
+    &nbsp•&nbsp
+    <a href="https://github.com/AftahBagas/Alpha#copyright--license-">Copyright & License</a>
+</p>
+
+# Alpha Userbot 🔥
+
+[![Build Status](https://travis-ci.com/AftahBagas/Alpha.svg?branch=Alpha)](https://travis-ci.com/AftahBagas/Alpha)
+![Python Version](https://img.shields.io/badge/python-3.8/3.9-lightgrey)
+![Release](https://img.shields.io/github/v/release/AftahBagas/Alpha)
+![Stars](https://img.shields.io/github/stars/AftahBagas/Alpha)
+![Forks](https://img.shields.io/github/forks/AftahBagas/Alpha)
+![Issues Open](https://img.shields.io/github/issues/AftahBagas/Alpha)
+![Issues Closed](https://img.shields.io/github/issues-closed/AftahBagas/Alpha)
+![PRs Open](https://img.shields.io/github/issues-pr/AftahBagas/Alpha)
+![PRs Closed](https://img.shields.io/github/issues-pr-closed/AftahBagas/Alpha)
+![Contributors](https://img.shields.io/github/contributors/AftahBagas/Alpha)
+![Repo Size](https://img.shields.io/github/repo-size/AftahBagas/Alpha)
+![License](https://img.shields.io/github/license/AftahBagas/Alpha)
+![Commit Activity](https://img.shields.io/github/commit-activity/m/AftahBagas/Alpha)
+[![Plugins Repo!](https://img.shields.io/badge/Plugins%20Repo-!-orange)](https://github.com/AftahBagas/AlphaPlugins)
+[![Join Channel!](https://img.shields.io/badge/Join%20Channel-!-red)](https://t.me/TeamSquadUserbotSupport)
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/AftahBagas/Alpha/?ref=repository-badge)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/AftahBagas/Alpha)
 
 **Alpha** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
