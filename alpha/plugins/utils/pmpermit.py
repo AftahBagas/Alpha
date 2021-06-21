@@ -382,7 +382,7 @@ if alpha.has_bot:
         else:
             user_dict = await alpha.get_user_dict(c_q.from_user.id)
             await c_q.edit_message_text(
-                noPmMessage.format_map(SafeDict(**user_dict)) + '\n`- Protected by userge`')
+                noPmMessage.format_map(SafeDict(**user_dict)) + '\n`- Protected by Alpha`')
             buttons = InlineKeyboardMarkup(
                 [
                     [
