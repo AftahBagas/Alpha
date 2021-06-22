@@ -5,7 +5,6 @@
 import os
 import re
 import glob
-import ffmpeg
 import shutil
 import asyncio
 import youtube_dl as ytdl
