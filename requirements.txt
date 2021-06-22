@@ -2,6 +2,7 @@ aiofiles
 aiohttp
 bs4
 ffmpeg
+emoji
 covid
 cowpy
 dnspython
