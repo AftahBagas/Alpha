@@ -4,6 +4,7 @@ bs4
 ffmpeg
 emoji
 covid
+AlphaAntiSpamApi
 cowpy
 dnspython
 typing
