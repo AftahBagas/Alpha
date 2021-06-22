@@ -4,7 +4,8 @@ from .progress import progress  # noqa
 from .sys_tools import SafeDict, get_import_path, terminate, secure_text  # noqa
 from .tools import (sort_file_name_key, # noqa
                     get_file_id_of_media,
-                    demojify,
+                    deEmojify,
+                    mention_html,
                     rand_array,
                     humanbytes,
                     time_formatter,
