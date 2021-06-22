@@ -11,7 +11,7 @@ from math import floor
 import wget
 import youtube_dl as ytdl
 
-from alpha import userge, Message, Config, pool
+from alpha import alpha, Message, Config, pool
 from alpha.utils import time_formatter, humanbytes
 from .upload import upload
 
