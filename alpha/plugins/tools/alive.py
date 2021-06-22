@@ -31,7 +31,6 @@ _IS_STICKER = False
 _DEFAULT = "https://t.me/AlphaZPlugins/9"
 _CHAT, _MSG_ID = None, None
 _LOGO_ID = None
-_ALIVE_MSG = "Alpha Userbot Is Running"
 
 @alpha.on_cmd(
     "alive", about={"header": "This command is just for fun"}, allow_channels=False
@@ -72,7 +71,7 @@ def _get_alive_text_and_markup(
     message: Message,
 ) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
     markup = None
-    output = f"""**{ALIVE_MSG}**\n
+    output = f"""**Alpha Userbot Is Running 🔥**\n
 **╭━─━─━─━─≪✠≫─━─━─━╮**\n
 **☉ ⏱️ • Uptime :** `{alpha.uptime}`
 **☉ 🧪 • Version :** `{get_version()}`
