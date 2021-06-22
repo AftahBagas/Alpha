@@ -183,7 +183,7 @@ async def joinvc(msg: Message):
                 )
             )
             await asyncio.sleep(3)
-            await call.start(CHAT_ID)
+            await alpha.start(CHAT_ID)
         except Exception as err:
             await msg.err(str(err))
             CHAT_ID, CHAT_NAME = 0, ""
