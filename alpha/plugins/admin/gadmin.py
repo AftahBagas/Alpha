@@ -6,7 +6,6 @@ import os
 import time
 import asyncio
 
-from emoji import get_emoji_regexp
 from pyrogram.types import ChatPermissions
 from pyrogram.errors import (
     FloodWait, UserAdminInvalid, UsernameInvalid, PeerIdInvalid, UserIdInvalid)
