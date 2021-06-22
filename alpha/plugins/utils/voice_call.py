@@ -11,7 +11,6 @@ import youtube_dl as ytdl
 
 from typing import List, Tuple
 from traceback import format_exc
-from pytgcalls import GroupCall
 from youtubesearchpython import VideosSearch
 
 from pyrogram.raw import functions
