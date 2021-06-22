@@ -493,7 +493,6 @@ async def nsc_handler():
     )
 
 
-@alpha.on_playout_ended
 async def skip_handler(_, __):
     await handle_queue()
 
