@@ -79,14 +79,14 @@ async def helpme(
             )
         ):
             commands = plugins[key].enabled_commands
-            out_str = f"""⚙️ Perintah<b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
+            out_str = f"""⚙️ **Perintah** <b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
 
 📚 <b>Plugin:</b>  <code>{key}</code>
 ❕ <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
             for i, cmd in enumerate(commands, start=1):
                 out_str += (
-                    f"    📖 <b>cmd(<code>{i}</code>):</b>  <code>{cmd.name}</code>\n"
-                    f"    📄 <b>info:</b>  <i>{cmd.doc}</i>\n\n"
+                    f"    • <b>cmd(<code>{i}</code>):</b>  <code>{cmd.name}</code>\n"
+                    f"    • <b>info:</b>  <i>{cmd.doc}</i>\n\n"
                 )
             out_str += f"""📖 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>"""
         else:
