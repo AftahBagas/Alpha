@@ -33,7 +33,7 @@ CHANNEL = alpha.getCLogger(__name__)
 )
 async def check_update(message: Message):
     """check or do updates"""
-    await message.edit("`Busmillah Cek Update :)`")
+    await message.edit("`Get the Latest Updates From Alpha`")
     flags = list(message.flags)
     pull_from_repo = False
     push_to_heroku = False
