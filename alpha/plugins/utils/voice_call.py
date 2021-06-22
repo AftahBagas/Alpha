@@ -446,7 +446,7 @@ async def pause_music(msg: Message):
     """ pause music in vc """
     await msg.delete()
 
-    call.pause_playout()
+    alpha.pause_playout()
     await reply_text(msg, "⏸️ **Paused** Music Successfully")
 
 
@@ -460,7 +460,7 @@ async def resume_music(msg: Message):
     """ resume music in vc """
     await msg.delete()
 
-    call.resume_playout()
+    alpha.resume_playout()
     await reply_text(msg, "◀️ **Resumed** Music Successfully")
 
 
@@ -477,7 +477,7 @@ async def stop_music(msg: Message):
     await reply_text(msg, "`Stopped Userge-Music.`", del_in=5)
 
 
-@call.on_network_status_changed
+@alpha.on_network_status_changed
 async def nsc_handler(c: GroupCall, connected: bool):
     global PLAYING, BACK_BUTTON_TEXT  # pylint: disable=global-statement
 
@@ -536,7 +536,7 @@ async def _skip(clear_queue: bool = False):
         await CHANNEL.log(f"`{format_exc().strip()}`")
         if QUEUE:
             out += "\n\n`Playing next Song.`"
-        await userge.send_message(
+        await alpha.send_message(
             CHAT_ID,
             out,
             disable_web_page_preview=True
@@ -571,7 +571,7 @@ async def yt_down(msg: Message):
         raise Exception("Song not Downloaded, add again in Queue [your wish]")
 
     await message.edit("`Transcoding...`")
-    call.input_filename = await _transcode(audio_path)
+    alpha.input_filename = await _transcode(audio_path)
     await message.delete()
 
     def requester():
@@ -611,7 +611,7 @@ async def tg_down(msg: Message):
     filename = os.path.join("temp_music_dir", os.path.basename(path))
 
     await message.edit("`Transcoding...`")
-    call.input_filename = await _transcode(filename)
+    alpha.input_filename = await _transcode(filename)
     await message.delete()
 
     BACK_BUTTON_TEXT = (
@@ -786,7 +786,7 @@ if alpha.has_bot:
                 return
 
         if 200 >= volume > 0:
-            await call.set_my_volume(volume)
+            await alpha.set_my_volume(volume)
             await cq.edit_message_text(f"Successfully set volume to {volume}")
         else:
             await cq.edit_message_text("`Invalid Range!`")
