@@ -44,7 +44,7 @@ async def _init() -> None:
 @alpha.on_cmd("allow", about={
     'header': "allows someone to contact",
     'description': "Ones someone is allowed, "
-                   "Userge will not interfere or handle such private chats",
+                   "Alpha will not interfere or handle such private chats",
     'usage': "{tr}allow [username | userID]\nreply {tr}allow to a message, "
              "do {tr}allow in the private chat"}, allow_channels=False, allow_via_bot=False)
 async def allow(message: Message):
