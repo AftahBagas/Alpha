@@ -2,7 +2,6 @@
 
 import time
 from json import dumps
-from emoji import get_emoji_regexp
 
 from googletrans import Translator, LANGUAGES
 
