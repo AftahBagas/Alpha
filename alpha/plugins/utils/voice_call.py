@@ -82,7 +82,7 @@ def check_cq_for_all(func):
     """ decorator to check CallbackQuery users """
 
     async def checker(_, c_q: CallbackQuery):
-        if c_q.from_user.id == userge.id or CMDS_FOR_ALL:
+        if c_q.from_user.id == alpha.id or CMDS_FOR_ALL:
             await func(c_q)
         else:
             await c_q.answer(
@@ -173,7 +173,7 @@ async def joinvc(msg: Message):
     CHAT_ID = msg.chat.id
     CHAT_NAME = msg.chat.title
     try:
-        await call.start(CHAT_ID)
+        await alpha.start(CHAT_ID)
     except RuntimeError:
         try:
             peer = await msg.client.resolve_peer(CHAT_ID)
@@ -203,7 +203,7 @@ async def leavevc(msg: Message):
     if CHAT_NAME:
         CHAT_NAME = ""
         CHAT_ID = 0
-        asyncio.get_event_loop().create_task(call.stop())
+        asyncio.get_event_loop().create_task(alpha.stop())
     else:
         await reply_text(msg, "`I didn't find any Voice-Chat to leave")
 
@@ -254,7 +254,7 @@ async def play_music(msg: Message):
                     msg = await reply_text(msg, _get_scheduled_text(title, link))
                 else:
                     msg = await msg.edit(f"[{title}]({link})")
-                await mesg.delete()
+                await mesg.delete() 
                 QUEUE.append(msg)
             else:
                 await mesg.edit("No results found.")
