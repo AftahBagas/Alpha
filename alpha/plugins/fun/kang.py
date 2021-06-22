@@ -6,7 +6,6 @@ import io
 import os
 import random
 
-import emoji
 from PIL import Image
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
