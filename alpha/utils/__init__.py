@@ -17,7 +17,6 @@ from .functions import (
     thumb_from_audio,
 ) 
 from .tools import (
-    clean_obj,
     get_file_id,
     humanbytes,
     parse_buttons,
