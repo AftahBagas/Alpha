@@ -70,7 +70,7 @@ def check_enable_for_all(func):
     """ decorator to check cmd is_enable for others """
 
     async def checker(msg: Message):
-        if msg.from_user.id == userge.id or CMDS_FOR_ALL:
+        if msg.from_user.id == alpha.id or CMDS_FOR_ALL:
             await func(msg)
 
     checker.__doc__ = func.__doc__
@@ -173,7 +173,7 @@ async def joinvc(msg: Message):
     CHAT_ID = msg.chat.id
     CHAT_NAME = msg.chat.title
     try:
-        await alpha.start(CHAT_ID)
+        await (CHAT_ID)
     except RuntimeError:
         try:
             peer = await msg.client.resolve_peer(CHAT_ID)
@@ -183,7 +183,7 @@ async def joinvc(msg: Message):
                 )
             )
             await asyncio.sleep(3)
-            await alpha.start(CHAT_ID)
+            await (CHAT_ID)
         except Exception as err:
             await msg.err(str(err))
             CHAT_ID, CHAT_NAME = 0, ""
