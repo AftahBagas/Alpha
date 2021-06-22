@@ -74,14 +74,14 @@ async def check_update(message: Message):
                 change_log + out, disable_web_page_preview=True
             )
         else:
-            await message.edit(f"**Alpha is up-to-date with [{branch}]**", del_in=5)
+            await message.edit(f"**Alpha is up-to-date with [Alpha]**", del_in=5)
         return
     if pull_from_repo:
         if out:
-            await message.edit(f"`New update found for [{branch}], Now pulling...`")
+            await message.edit(f"`New update found for [Alpha], Now pulling...`")
             await _pull_from_repo(repo, branch)
             await CHANNEL.log(
-                f"**PULLED update from [{branch}]:\n\n📄 CHANGELOG 📄**\n\n{out}"
+                f"**PULLED update from [Alpha]:\n\n📄 CHANGELOG 📄**\n\n{out}"
             )
             if not push_to_heroku:
                 await message.edit(
@@ -95,13 +95,13 @@ async def check_update(message: Message):
         else:
             active = repo.active_branch.name
             if active == branch:
-                await message.err(f"already in [{branch}]!")
+                await message.err(f"already in [Alpha]!")
                 return
             await message.edit(
-                f"`Moving HEAD from [{active}] >>> [{branch}] ...`", parse_mode="md"
+                f"`Moving HEAD from [{active}] >>> [Alpha] ...`", parse_mode="md"
             )
             await _pull_from_repo(repo, branch)
-            await CHANNEL.log(f"`Moved HEAD from [{active}] >>> [{branch}] !`")
+            await CHANNEL.log(f"`Moved HEAD from [{active}] >>> [Alpha] !`")
             await message.edit("`Now restarting... Wait for a while!`", del_in=3)
             asyncio.get_event_loop().create_task(petercord.restart())
     if push_to_heroku:
