@@ -79,7 +79,7 @@ async def helpme(
             )
         ):
             commands = plugins[key].enabled_commands
-            out_str = f"""⚙️ **Perintah** <b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
+            out_str = f"""⚙️ 𝗣𝗲𝗿𝗶𝗻𝘁𝗮𝗵 <b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
 
 📚 <b>Plugin:</b>  <code>{key}</code>
 ❕ <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
