@@ -14,6 +14,6 @@ async def see_repo(message: Message):
   • **Copyright** : {versions.__copyright__}
   • **Repo** : [Alpha]({Config.UPSTREAM_REPO})
 
-**Creator** **[Alfareza](https://t.me/kanjengingsun)**
+**Creator** [Alfareza](https://t.me/kanjengingsun)
 """
     await message.edit(output)
