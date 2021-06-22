@@ -39,7 +39,6 @@ QUEUE: List[Message] = []
 BACK_BUTTON_TEXT = ""
 CQ_MSG: List[RawMessage] = []
 
-call = (alpha, play_on_repeat=False)
 
 yt_regex = re.compile(
     r'(https?://)?(www\.)?'
