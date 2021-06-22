@@ -1,6 +1,7 @@
 aiofiles
 aiohttp
 bs4
+ffmpeg
 covid
 cowpy
 dnspython
