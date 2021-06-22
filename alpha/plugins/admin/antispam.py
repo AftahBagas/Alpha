@@ -9,7 +9,6 @@ from typing import Union
 import aiohttp
 import spamwatch
 from spamwatch.types import Ban
-from AlphaAntiSpamApi import Client
 
 from alpha import alpha, Message, Config, get_collection, filters, pool
 
