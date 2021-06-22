@@ -59,7 +59,7 @@ async def allow(message: Message):
         if a.matched_count:
             await message.edit("`Already approved to direct message`", del_in=3)
         else:
-            await (await userge.get_users(userid)).unblock()
+            await (await alpha.get_users(userid)).unblock()
             await message.edit("`Approved to direct message`", del_in=3)
     else:
         await message.edit(
