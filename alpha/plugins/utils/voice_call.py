@@ -358,7 +358,7 @@ async def current(msg: Message):
     await reply_text(
         msg,
         BACK_BUTTON_TEXT,
-        markup=default_markup() if userge.has_bot else None,
+        markup=default_markup() if alpha.has_bot else None,
         to_reply=True
     )
 
@@ -410,7 +410,7 @@ async def set_volume(msg: Message):
     else:
         try:
 
-            await userge.bot.send_message(
+            await alpha.bot.send_message(
                 msg.chat.id,
                 "**🎚 Volume Control**\n\n`Click on the button to change volume"
                 " or Click last option to Enter volume manually.`",
@@ -494,7 +494,7 @@ async def nsc_handler(c: GroupCall, connected: bool):
     )
 
 
-@call.on_playout_ended
+@alpha.on_playout_ended
 async def skip_handler(_, __):
     await handle_queue()
 
@@ -692,7 +692,7 @@ def _transcode(input_: str) -> str:
     return output
 
 
-if userge.has_bot:
+if alpha.has_bot:
     @alpha.bot.on_callback_query(filters.regex("(skip|queue|back)"))
     @check_cq_for_all
     async def vc_callback(cq: CallbackQuery):
