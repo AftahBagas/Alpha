@@ -477,7 +477,7 @@ async def stop_music(msg: Message):
     await reply_text(msg, "`Stopped Userge-Music.`", del_in=5)
 
 
-async def nsc_handler(c: GroupCall, connected: bool):
+async def nsc_handler():
     global PLAYING, BACK_BUTTON_TEXT  # pylint: disable=global-statement
 
     PLAYING = False
