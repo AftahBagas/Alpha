@@ -37,7 +37,9 @@ runPythonCode() {
 }
 
 runPythonModule() {
-    python${pVer%.*} -m "$@"
+    python${pVer%.*} -m "$@" &
+    setProc $!
+    waitProc
 }
 
 gitInit() {
@@ -86,7 +88,7 @@ upgradePip() {
 }
 
 installReq() {
-    pip3 install -U -r $1/requirements.txt &> /dev/null
+    pip3 install -r $1/requirements.txt &> /dev/null
 }
 
 printLine() {
