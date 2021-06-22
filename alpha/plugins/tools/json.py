@@ -1,4 +1,4 @@
-from alpha import userge, Message
+from alpha import alpha, Message
 
 
 @alpha.on_cmd("json", about={
