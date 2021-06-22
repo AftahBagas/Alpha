@@ -3,7 +3,6 @@
 import json
 
 import aiohttp
-from emoji import get_emoji_regexp
 
 from alpha import Config, Message, alpha
 
