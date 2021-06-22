@@ -48,8 +48,8 @@ async def active_afk(message: Message) -> None:
     TIME = time.time()
     REASON = message.input_str
     await asyncio.gather(
-        CHANNEL.log(f"User Alpha Telah Afk! : `{REASON}`"),
-        message.edit("`Afk, Gua Lagi Sibuk!`"),
+        CHANNEL.log(f"Gua Lagi AFK! : `{REASON}`"),
+        message.edit("`Gua Lagi AFK!`"),
         AFK_COLLECTION.drop(),
         SAVED_SETTINGS.update_one(
             {"_id": "AFK"},
@@ -88,7 +88,7 @@ async def handle_afk_incomming(message: Message) -> None:
         if not (USERS[user_id][0] + USERS[user_id][1]) % randint(2, 4):
             if REASON:
                 out_str = (
-                    f"**Afk** Gua Lagi Afk.\n **Karena**: <code>{REASON}</code>\n\n"
+                    f"Gua Lagi AFK.\n **Karena**: <code>{REASON}</code>\n\n"
                     f"Terakhir Dilihat: `{afk_time} ago`"
                 )
             else:
@@ -101,7 +101,7 @@ async def handle_afk_incomming(message: Message) -> None:
     else:
         if REASON:
             out_str = (
-                f"**Afk** Gua Lagi Afk.\n **Karena**: <code>{REASON}</code>\n\n"
+                f"Gua Lagi AFK.\n **Karena**: <code>{REASON}</code>\n\n"
                 f"Terakhir Dilihat: `{afk_time} ago`"
             )
         else:
