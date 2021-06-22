@@ -10,7 +10,7 @@ from pyrogram.types import ChatPermissions
 from pyrogram.errors import (
     FloodWait, UserAdminInvalid, UsernameInvalid, PeerIdInvalid, UserIdInvalid)
 
-from userge import alpha, Message
+from alpha import alpha, Message
 
 CHANNEL = alpha.getCLogger(__name__)
 
