@@ -4,7 +4,7 @@
 
 import os
 
-from alpha import Config, Message, userge
+from alpha import Config, Message, alpha
 from alpha.plugins import ROOT
 from alpha.utils import get_import_path
 
