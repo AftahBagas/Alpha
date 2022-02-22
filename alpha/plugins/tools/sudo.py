@@ -123,7 +123,7 @@ async def view_sudo(message: Message):
     if not Config.SUDO_USERS:
         await message.edit("**SUDO** pengguna tidak ditemukan!", del_in=5)
         return
-    out_str = "⚙️ **SUDO USERS** ⚙️\n⚡Alpha Userbot⚡** \n\n"
+    out_str = "⚙️ **SUDO USERS** ⚙️\n**© Alpha Userbot** \n\n"
     async for user in SUDO_USERS_COLLECTION.find():
         out_str += f" 🤵 {user['men']} 𝗜𝗗 `{user['_id']}`\n"
     await message.edit(out_str, del_in=0)
@@ -216,7 +216,7 @@ async def view_sudo_cmd(message: Message):
     if not Config.ALLOWED_COMMANDS:
         await message.edit("**SUDO** cmds tidak ditemukan!", del_in=5)
         return
-    out_str = f"🔐 **SUDO CMDS** 🔐\n⚡Alpha Userbot⚡\n\n**trigger** : `{Config.SUDO_TRIGGER}`\n\n"
+    out_str = f"🔐 **SUDO CMDS** 🔐\n\n**trigger** : `{Config.SUDO_TRIGGER}`\n\n**© Alpha Userbot**\n"
     async for cmd in SUDO_CMDS_COLLECTION.find().sort("_id"):
         out_str += f"`{cmd['_id']}`  "
     await message.edit_or_send_as_file(out_str, del_in=0)
