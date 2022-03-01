@@ -98,7 +98,7 @@ async def gban_at_entry(message: Message):
                         f" Banned in {message.chat.title}\n\n$AUTOBAN #id{user_id}")
                 )
                 continue
-            if Config.USERGE_ANTISPAM_API:
+            if Config.ALPHA_ANTISPAM_API:
                 try:
                     ban = await _get_alpha_antispam_data(user_id)
                 except Exception as err:
@@ -161,7 +161,7 @@ async def getData(link: str):
 
 @pool.run_in_thread
 def _get_userge_antispam_data(user_id: int):
-    return Client(Config.USERGE_ANTISPAM_API).getban(user_id)
+    return Client(Config.ALPHA_ANTISPAM_API).getban(user_id)
 
 
 @pool.run_in_thread
