@@ -67,7 +67,7 @@ async def restart_(message: Message):
         time.sleep(30)
     else:
         await message.edit("finalizing...", del_in=1)
-        asyncio.get_event_loop().create_task(userge.restart())
+        asyncio.get_event_loop().create_task(alpha.restart())
 
 
 @alpha.on_cmd("shutdown", about={"header": "shutdown alpha :)"}, allow_channels=False)
