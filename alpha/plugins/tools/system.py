@@ -51,7 +51,7 @@ async def _init() -> None:
     allow_channels=False,
 )
 async def restart_(message: Message):
-    """restart alphaz"""
+    """restart alpha"""
     await message.edit("Restarting Alpha Services", log=__name__)
     LOG.info("ALPHA Services - Restart initiated")
     if "t" in message.flags:
@@ -325,7 +325,7 @@ async def view_disabled_chats_(message: Message):
 
 @alpha.on_cmd(
     "sleep (\\d+)",
-    about={"header": "sleep userge :P", "usage": "{tr}sleep [timeout in seconds]"},
+    about={"header": "sleep alpha :P", "alpha": "{tr}sleep [timeout in seconds]"},
     allow_channels=False,
 )
 async def sleep_(message: Message) -> None:
@@ -336,10 +336,10 @@ async def sleep_(message: Message) -> None:
 
 
 async def _slp_wrkr(seconds: int) -> None:
-    await alphaz.stop()
+    await alpha.stop()
     await asyncio.sleep(seconds)
-    await alphaz.reload_plugins()
-    await alphaz.start()
+    await alpha.reload_plugins()
+    await alpha.start()
 
 
 @alpha.on_user_status()
