@@ -108,7 +108,7 @@ async def ungban_user(message: Message):
     if 'chat_ids' in found:
         for chat_id in found['chat_ids']:
             try:
-                await userge.unban_chat_member(chat_id, user_id)
+                await alpha.unban_chat_member(chat_id, user_id)
                 await CHANNEL.log(
                     r"\\**#Antispam_Log**//"
                     f"\n**User:** [{firstname}](tg://user?id={user_id})\n"
