@@ -1,1 +1,45 @@
-## Ported by ilham mansiz## 😌😌 from pyrogram.errors import ( FloodWait,) from petercord import Message, petercord import asyncio Gblacklist = [-1001159103924, -1001718757023] @petercord.on_cmd("gcast", about={ 'header': "gcast chat", 'petercord': "{tr}gcast text", 'examples': "{tr}gcast"})async def gcast(message: Message): xx = message.text if xx: msg = xx elif message.reply_to_message: msg = await petercord.get_reply_message() else: return await message.edit("Berikan Sebuah Pesan atau Reply") kk = await message.edit("Globally Broadcasting Msg...") er = 0 done = 0 async for x in petercord.iter_dialogs(): if x.is_group: chat = x.id if chat not in Gblacklist: try: await petercord..send_message(chat, msg) await asyncio.sleep(0.1) done += 1 except FloodWait as anj: await asyncio.sleep(int(anj.seconds)) await petercord.send_message(chat, msg) done += 1 except BaseException: er += 1 await kk.edit( f"Berhasil Mengirim Pesan Ke {done} Grup, Gagal Mengirim Pesan Ke {er} Grup" )
+from pyrogram.errors import (
+    FloodWait,
+)
+
+from alpha import Message, alpha
+
+import asyncio
+
+
+Gblacklist = [-1001159103924, -1001718757023]
+
+
+
+@alpha.on_cmd("gcast", about={
+    'header': "gcast chat",
+    'alpha': "{tr}gcast text",
+    'examples': "{tr}gcast"})
+async def gcast(message: Message):
+    xx = message.text
+    if xx:
+        msg = xx
+    elif message.reply_to_message:
+        msg = await alpha.get_reply_message()
+    else:
+        return await message.edit("**Berikan Sebuah Pesan atau Reply**")
+    alfa = await message.edit("`Globally Broadcasting Msg...`")
+    er = 0
+    done = 0
+    async for x in alpha.iter_dialogs():
+        if x.is_group:
+            chat = x.id
+            if chat not in Gblacklist:
+                try:
+                    await alpha.send_message(chat, msg)
+                    await asyncio.sleep(0.1)
+                    done += 1
+                except FloodWait as anj:
+                    await asyncio.sleep(int(anj.seconds))
+                    await alpha.send_message(chat, msg)
+                    done += 1
+                except BaseException:
+                    er += 1
+    await alfa.edit(
+        f"**Sukses Mengirim Pesan Ke** `{done}` **Grup, Gagal Mengirim Pesan Ke** `{er}` **Grup**"
+    )
