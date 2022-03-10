@@ -22,7 +22,7 @@ async def gcast(message: Message):
     elif message.reply_to_message:
         msg = await alpha.get_reply_message()
     else:
-        return await message.edit("**Berikan Sebuah Pesan atau Reply**")
+        return await message.edit("`Berikan Sebuah Pesan atau Reply`")
     alfa = await message.edit("`Globally Broadcasting Msg...`")
     er = 0
     done = 0
@@ -38,5 +38,5 @@ async def gcast(message: Message):
                 except BaseException:
                     er += 1
     await alfa.edit(
-        f"**Sukses Mengirim Pesan Ke** `{done}` **Grup, Gagal Mengirim Pesan Ke** `{er}` **Grup**"
+        f"_Sukses Mengirim Pesan Ke_ `{done}` _Grup, Gagal Mengirim Pesan Ke_ `{er}` _Grup_"
     )
