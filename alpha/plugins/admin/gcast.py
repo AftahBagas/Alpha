@@ -27,9 +27,6 @@ async def gcast(message: Message):
     er = 0
     done = 0
     async for x in alpha.iter_dialogs():
-        if x.is_group:
-            chat = x.id
-            if chat not in Gblacklist:
                 try:
                     await alpha.send_message(chat, msg)
                     await asyncio.sleep(0.1)
