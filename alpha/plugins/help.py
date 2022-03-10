@@ -467,7 +467,6 @@ if alpha.has_bot:
                             ),
                             InlineKeyboardButton(
                                 "Owner", url="https://t.me/kanjengingsun"
-                                ),
                             ),
                         ]
                     ]
