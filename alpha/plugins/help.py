@@ -331,7 +331,7 @@ if alpha.has_bot:
                     )
                 )
         else:
-            cur_clnt = "🤵 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "🤖 BOT"
+            cur_clnt = "🤵 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "🤖 SUDO"
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"⚙️ Help Untuk Mode : {cur_clnt}", callback_data="chgclnt".encode()
@@ -467,12 +467,6 @@ if alpha.has_bot:
                             ),
                             InlineKeyboardButton(
                                 "Owner", url="https://t.me/kanjengingsun"
-                            ),
-                            InlineKeyboardButton(
-                                "Deploy",
-                                url=(
-                                    "https://heroku.com/deploy?template="
-                                    "https://github.com/AftahBagas/Apack"
                                 ),
                             ),
                         ]
