@@ -280,11 +280,11 @@ async def uninvitedPmHandler(message: Message):
                 "Please wait until you get approved to pm !", del_in=5)
     else:
         pmCounter.update({message.from_user.id: 1})
-        if userge.has_bot and _IS_INLINE:
+        if alpha.has_bot and _IS_INLINE:
             try:
-                bot_username = (await userge.bot.get_me()).username
+                bot_username = (await alpha.bot.get_me()).username
                 k = await alpha.get_inline_bot_results(bot_username, "pmpermit")
-                await userge.send_inline_bot_result(
+                await alpha.send_inline_bot_result(
                     message.chat.id, query_id=k.query_id,
                     result_id=k.results[2].id, hide_via=True
                 )
@@ -308,7 +308,7 @@ async def outgoing_auto_approve(message: Message):
     Config.ALLOWED_CHATS.add(userID)
     await ALLOWED_COLLECTION.update_one(
         {'_id': userID}, {"$set": {'status': 'allowed'}}, upsert=True)
-    user_dict = await userge.get_user_dict(userID)
+    user_dict = await alpha.get_user_dict(userID)
     await CHANNEL.log(f"**#AUTO_APPROVED**\n{user_dict['mention']}")
 
 if alpha.has_bot:
@@ -317,7 +317,7 @@ if alpha.has_bot:
         owner = await alpha.get_me()
         if c_q.from_user.id == owner.id:
             userID = int(c_q.matches[0].group(1))
-            await userge.unblock_user(userID)
+            await alpha.unblock_user(userID)
             user = await alpha.get_users(userID)
             if userID in Config.ALLOWED_CHATS:
                 await c_q.edit_message_text(
@@ -325,7 +325,7 @@ if alpha.has_bot:
             else:
                 await c_q.edit_message_text(
                     f"{user.mention} allowed to Direct Messages.")
-                await userge.send_message(
+                await alpha.send_message(
                     userID, f"{owner.mention} `approved you to Direct Messages.`")
                 if userID in pmCounter:
                     del pmCounter[userID]
@@ -341,7 +341,7 @@ if alpha.has_bot:
         if c_q.from_user.id == owner.id:
             userID = int(c_q.matches[0].group(1))
             user_dict = await alpha.get_user_dict(userID)
-            await userge.send_message(
+            await alpha.send_message(
                 userID, blocked_message.format_map(SafeDict(**user_dict)))
             await userge.block_user(userID)
             if userID in pmCounter:
@@ -349,7 +349,7 @@ if alpha.has_bot:
             if userID in Config.ALLOWED_CHATS:
                 Config.ALLOWED_CHATS.remove(userID)
             k = await ALLOWED_COLLECTION.delete_one({'_id': userID})
-            user = await userge.get_users(userID)
+            user = await alpha.get_users(userID)
             if k.deleted_count:
                 await c_q.edit_message_text(
                     f"{user.mention} `Prohibitted to direct message`")
