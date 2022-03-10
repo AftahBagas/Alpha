@@ -6,7 +6,6 @@ from .sys_tools import SafeDict, get_import_path, terminate, secure_text
 from .functions import (
     AttributeDict,
     check_owner,
-    is_group,
     cleanhtml,
     deEmojify,
     escape_markdown,
