@@ -60,7 +60,7 @@ async def autopic(message: Message):
     if os.path.exists(BASE_PIC) and not image_path:
         pass
     elif not image_path:
-        profile_photo = await alphaz.get_profile_photos("me", limit=1)
+        profile_photo = await alpha.get_profile_photos("me", limit=1)
         if not profile_photo:
             await message.err("sorry, couldn't find any picture!")
             return
@@ -130,7 +130,7 @@ async def apic_worker():
                 align="center",
             )
             img.convert("RGB").save(MDFY_PIC)
-            await userge.set_profile_photo(photo=MDFY_PIC)
+            await alpha.set_profile_photo(photo=MDFY_PIC)
             os.remove(MDFY_PIC)
             LOG.info("profile photo has been updated!")
         await asyncio.sleep(1)
