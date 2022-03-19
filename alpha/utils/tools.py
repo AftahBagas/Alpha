@@ -1,11 +1,10 @@
 # alfareza
 
-import os
 import re
 import shlex
 import asyncio
-from os.path import basename
-from typing import Tuple, List, Optional
+from os.path import basename, join, exists
+from typing import Tuple, List, Optional, Iterator, Union
 
 from html_telegraph_poster import TelegraphPoster
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -13,26 +12,71 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import alpha
 
 _LOG = alpha.logging.getLogger(__name__)
-_EMOJI_PATTERN = re.compile(
-    "["
-    "\U0001F1E0-\U0001F1FF"  # flags (iOS)
-    "\U0001F300-\U0001F5FF"  # symbols & pictographs
-    "\U0001F600-\U0001F64F"  # emoticons
-    "\U0001F680-\U0001F6FF"  # transport & map symbols
-    "\U0001F700-\U0001F77F"  # alchemical symbols
-    "\U0001F780-\U0001F7FF"  # Geometric Shapes Extended
-    "\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
-    "\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
-    "\U0001FA00-\U0001FA6F"  # Chess Symbols
-    "\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
-    "\U00002702-\U000027B0"  # Dingbats
-    "]+")
-_BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:(?:/{0,2})(.+?)(:same)?])")
+_BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:/{0,2}(.+?)(:same)?])")
+_PTN_SPLIT = re.compile(r'(\.\d+|\.|\d+)')
+
+
+def sort_file_name_key(file_name: str) -> tuple:
+    """ sort key for file names """
+    if not isinstance(file_name, str):
+        file_name = str(file_name)
+    return tuple(_sort_algo(_PTN_SPLIT.split(file_name.lower())))
+
+
+# this algo doesn't support signed values
+def _sort_algo(data: List[str]) -> Iterator[Union[str, float]]:
+    """ sort algo for file names """
+    p1 = 0.0
+    for p2 in data:
+        # skipping null values
+        if not p2:
+            continue
+
+        # first letter of the part
+        c = p2[0]
+
+        # checking c is a digit or not
+        # if yes, p2 should not contain any non digits
+        if c.isdigit():
+            # p2 should be [0-9]+
+            # so c should be 0-9
+            if c == '0':
+                # add padding
+                # this fixes `a1` and `a01` messing
+                if isinstance(p1, str):
+                    yield 0.0
+                yield c
+
+            # converting to float
+            p2 = float(p2)
+
+            # add padding
+            if isinstance(p1, float):
+                yield ''
+
+        # checking p2 is `.[0-9]+` or not
+        elif c == '.' and len(p2) > 1 and p2[1].isdigit():
+            # p2 should be `.[0-9]+`
+            # so converting to float
+            p2 = float(p2)
+
+            # add padding
+            if isinstance(p1, str):
+                yield 0.0
+            yield c
+
+        # add padding if previous and current both are strings
+        if isinstance(p1, str) and isinstance(p2, str):
+            yield 0.0
+
+        yield p2
+        # saving current value for later use
+        p1 = p2
 
 
 def demojify(string: str) -> str:
     """ Remove emojis and other non-safe characters from string """
-    return re.sub(_EMOJI_PATTERN, '', string)
+    return get_emoji_regexp().sub(u'', string)
 
 
 def get_file_id_of_media(message: 'alpha.Message') -> Optional[str]:
@@ -70,15 +114,16 @@ def time_formatter(seconds: float) -> str:
     return tmp[:-2]
 
 
+# https://github.com/AftahBagas/AlphaPlugins/blob/master/plugins/anilist.py
 def post_to_telegraph(a_title: str, content: str) -> str:
     """ Create a Telegram Post using HTML Content """
     post_client = TelegraphPoster(use_api=True)
-    auth_name = "Alpha"
+    auth_name = "@theAlphaSupport"
     post_client.create_api_token(auth_name)
     post_page = post_client.post(
         title=a_title,
         author=auth_name,
-        author_url="https://t.me/x_xtests",
+        author_url="https://t.me/TheAlphaSupport",
         text=content
     )
     return post_page['url']
@@ -101,19 +146,19 @@ async def take_screen_shot(video_file: str, duration: int, path: str = '') -> Op
     """ take a screenshot """
     _LOG.info('[[[Extracting a frame from %s ||| Video duration => %s]]]', video_file, duration)
     ttl = duration // 2
-    thumb_image_path = path or os.path.join(userge.Config.DOWN_PATH, f"{basename(video_file)}.jpg")
+    thumb_image_path = path or join(alpha.Config.DOWN_PATH, f"{basename(video_file)}.jpg")
     command = f'''ffmpeg -ss {ttl} -i "{video_file}" -vframes 1 "{thumb_image_path}"'''
     err = (await runcmd(command))[1]
     if err:
         _LOG.error(err)
-    return thumb_image_path if os.path.exists(thumb_image_path) else None
+    return thumb_image_path if exists(thumb_image_path) else None
 
 
 def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
     """ markdown_note to string and buttons """
     prev = 0
     note_data = ""
-    buttons: List[Tuple[str, str, str]] = []
+    buttons: List[Tuple[str, str, bool]] = []
     for match in _BTN_URL_REGEX.finditer(markdown_note):
         n_escapes = 0
         to_check = match.start(1) - 1

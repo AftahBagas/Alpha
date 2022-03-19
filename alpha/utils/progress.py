@@ -1,4 +1,4 @@
-# alfareza
+# Alfareza
 
 import time
 from math import floor
@@ -53,9 +53,9 @@ async def progress(current: int,
             ud_type,
             file_name,
             ''.join((alpha.Config.FINISHED_PROGRESS_STR
-                     for i in range(floor(percentage / 5)))),
+                     for _ in range(floor(percentage / 5)))),
             ''.join((alpha.Config.UNFINISHED_PROGRESS_STR
-                     for i in range(20 - floor(percentage / 5)))),
+                     for _ in range(20 - floor(percentage / 5)))),
             round(percentage, 2),
             humanbytes(current),
             humanbytes(total),

@@ -2,12 +2,12 @@
 
 
 class StopConversation(Exception):
-    """ raise if conversation has terminated """
+    """raise if conversation has terminated"""
 
 
 class ProcessCanceled(Exception):
-    """ raise if thread has terminated """
+    """raise if thread has terminated"""
 
 
 class AlphaBotNotFound(Exception):
-    """ raise if alpha plugins bot not found """
+    """raise if alpha plugins bot not found"""

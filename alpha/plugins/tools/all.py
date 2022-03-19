@@ -1,13 +1,14 @@
 # alfareza
 
-from alpha import alpha, Message
+from alpha import Message, alpha
+
 from .. import get_all_plugins
 
 
-@alpha.on_cmd("all", about={'header': "list all plugins in plugins/ path"})
+@alpha.on_cmd("all", about={"header": "list all plugins in plugins/ path"})
 async def getplugins(message: Message):
     raw_ = get_all_plugins()
     out_str = f"**--({len(raw_)}) Plugins Available!--**\n\n"
-    for plugin in ('/'.join(i.split('.')) for i in raw_):
+    for plugin in ("/".join(i.split(".")) for i in raw_):
         out_str += f"    `{plugin}.py`\n"
     await message.edit(text=out_str, del_in=0)

@@ -1,5 +1,16 @@
 # alfareza
 
-. init/init.sh
+. init/proc.sh
 
-runAlpha "$@"
+declare -ir usr1=138
+declare -r cmd='. init/init.sh; runAlpha "$@"'
+
+run() {
+    reInitProc
+    bash -c "$cmd" $0 "$@" &
+    setProc $!
+    waitProc
+    test $? -eq $usr1 && run "$@"
+}
+
+run "$@"

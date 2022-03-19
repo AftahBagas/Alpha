@@ -1,3 +1,5 @@
+# alfrareza
+
 __all__ = ['ChannelLogger']
 
 import asyncio
@@ -22,7 +24,7 @@ def _gen_string(name: str) -> str:
 
 class ChannelLogger:
     """ Channel logger for Alpha """
-    def __init__(self, client: Union['_client.Userge', '_client.AlphaBot'], name: str) -> None:
+    def __init__(self, client: Union['_client.Alphaz', '_client.AlphazBot'], name: str) -> None:
         self._id = Config.LOG_CHANNEL_ID
         self._client = client
         self._string = _gen_string(name)
@@ -139,7 +141,7 @@ class ChannelLogger:
         return message_id
 
     async def forward_stored(self,
-                             client: Union['_client.Alpha', '_client.AlphaBot'],
+                             client: Union['_client.Alphaz', '_client.AlphazBot'],
                              message_id: int,
                              chat_id: int,
                              user_id: int,

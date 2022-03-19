@@ -11,5 +11,5 @@ async def _worker() -> None:
     await alpha.send_message(chat_id, f'`{type_} build completed !`')
 
 if __name__ == "__main__":
-    alphaz.begin(_worker())
+    alpha.begin(_worker())
     print('Alpha test has been finished!')

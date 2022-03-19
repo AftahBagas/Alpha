@@ -1,11 +1,19 @@
 # alfareza
 
 . init/logbot/logbot.sh
+. init/proc.sh
 . init/utils.sh
 . init/checks.sh
 
-trap handleSigTerm TERM
-trap handleSigInt INT
+trap 'handleSig SIGHUP' HUP
+trap 'handleSig SIGTERM' TERM
+trap 'handleSig SIGINT' INT
+trap '' USR1
+
+handleSig() {
+    log "Exiting With $1 ..."
+    killProc
+}
 
 initAlpha() {
     printLogo
@@ -19,28 +27,18 @@ initAlpha() {
 startAlpha() {
     startLogBotPolling
     runPythonModule alpha "$@"
+    waitProc
 }
 
 stopAlpha() {
     sendMessage "Exiting Alpha ..."
     endLogBotPolling
-    exit 0
-}
-
-handleSigTerm() {
-    log "Exiting With SIGTERM (143) ..."
-    stopAlpha
-    exit 143
-}
-
-handleSigInt() {
-    log "Exiting With SIGINT (130) ..."
-    stopAlpha
-    exit 130
 }
 
 runAlpha() {
     initAlpha
     startAlpha "$@"
+    local code=$?
     stopAlpha
+    return $code
 }

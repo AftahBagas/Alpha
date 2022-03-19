@@ -1,6 +1,6 @@
 # alfareza
 
-__all__ = ['Config', 'get_version']
+__all__ = ["Config", "get_version"]
 
 import os
 from typing import Set
@@ -9,7 +9,8 @@ import heroku3
 from git import Repo
 from pyrogram import filters
 
-from alpha import logging, logbot
+from alpha import logbot, logging
+
 from . import versions
 
 _REPO = Repo()
@@ -18,13 +19,17 @@ logbot.reply_last_msg("Setting Configs ...")
 
 
 class Config:
-    """ Configs to setup Alpha """
+    """Configs to setup Alpha"""
+
     API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")
+    ALIVE_MSG = os.environ.get("ALIVE_MSG", "Alpha Userbot Is Running")
     WORKERS = int(os.environ.get("WORKERS")) or os.cpu_count() + 4
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
     HU_STRING_SESSION = os.environ.get("HU_STRING_SESSION", None)
-    OWNER_ID = tuple(filter(lambda x: x, map(int, os.environ.get("OWNER_ID", "0").split())))
+    OWNER_ID = tuple(
+        filter(lambda x: x, map(int, os.environ.get("OWNER_ID", "0").split()))
+    )
     LOG_CHANNEL_ID = int(os.environ.get("LOG_CHANNEL_ID"))
     AUTH_CHATS = (OWNER_ID[0], LOG_CHANNEL_ID) if OWNER_ID else (LOG_CHANNEL_ID,)
     DB_URI = os.environ.get("DATABASE_URL")
@@ -41,6 +46,7 @@ class Config:
     UPSTREAM_REPO = os.environ.get("UPSTREAM_REPO")
     UPSTREAM_REMOTE = os.environ.get("UPSTREAM_REMOTE")
     SPAM_WATCH_API = os.environ.get("SPAM_WATCH_API", None)
+    ALPHA_ANTISPAM_API = os.environ.get("ALPHA_ANTISPAM_API", None)
     CURRENCY_API = os.environ.get("CURRENCY_API", None)
     OCR_SPACE_API_KEY = os.environ.get("OCR_SPACE_API_KEY", None)
     OPEN_WEATHER_MAP = os.environ.get("OPEN_WEATHER_MAP", None)
@@ -56,10 +62,10 @@ class Config:
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", None)
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
-    LOAD_UNOFFICIAL_PLUGINS = os.environ.get(
-        "LOAD_UNOFFICIAL_PLUGINS") == "true"
+    LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
+    ASSERT_SINGLE_INSTANCE = os.environ.get("ASSERT_SINGLE_INSTANCE", "false").lower() == "true"
     THUMB_PATH = DOWN_PATH + "thumb_image.jpg"
-    TMP_PATH = "userge/plugins/temp/"
+    TMP_PATH = "alpha/plugins/temp/"
     MAX_MESSAGE_LENGTH = 4096
     MSG_DELETE_TIMEOUT = 120
     WELCOME_DELETE_TIMEOUT = 120
@@ -75,21 +81,23 @@ class Config:
     ALLOWED_COMMANDS: Set[str] = set()
     ANTISPAM_SENTRY = False
     RUN_DYNO_SAVER = False
-    HEROKU_APP = heroku3.from_key(HEROKU_API_KEY).apps()[HEROKU_APP_NAME] \
-        if HEROKU_API_KEY and HEROKU_APP_NAME else None
+    HEROKU_APP = (
+        heroku3.from_key(HEROKU_API_KEY).apps()[HEROKU_APP_NAME]
+        if HEROKU_API_KEY and HEROKU_APP_NAME
+        else None
+    )
     STATUS = None
 
 
 def get_version() -> str:
-    """ get Alpha version """
+    """get Alpha version"""
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     if "/AftahBagas/Alpha" in Config.UPSTREAM_REPO.lower():
-        diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
+        diff = list(_REPO.iter_commits(f"v{ver}..HEAD"))
         if diff:
             return f"{ver}-Grade.{len(diff)}"
     else:
-        diff = list(_REPO.iter_commits(
-            f'{Config.UPSTREAM_REMOTE}/Alpha..HEAD'))
+        diff = list(_REPO.iter_commits(f"{Config.UPSTREAM_REMOTE}/Alpha..HEAD"))
         if diff:
             return f"{ver}-GAY.{len(diff)}"
     return ver
